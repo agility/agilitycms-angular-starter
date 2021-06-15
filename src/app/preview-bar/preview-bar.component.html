@@ -1,34 +1,64 @@
-<div class="bg-indigo-600"
-	*ngIf="visible"
-	x-transition:enter="transition ease-out duration-300"
-    x-transition:enter-start="transform scale-y-0"
-    x-transition:enter-end="transform scale-y-100"
-    x-transition:leave="transition ease-in duration-300"
-    x-transition:leave-start="transform scale-y-100"
-    x-transition:leave-end="transform scale-y-0">
-  <div class="max-w-screen-xl mx-auto py-3 px-3 sm:px-6 lg:px-8">
-    <div class="flex items-center justify-between flex-wrap">
-      <div class="w-0 flex-1 flex items-center">
-        <span class="flex p-2 rounded-lg bg-indigo-800">
-         <img src="https://static.agilitycms.com/brand/agility-triangle-yellow.svg" alt="" class="w-5 h-5" />
-        </span>
-        <p class="ml-3 font-medium text-white truncate">
-          <span class="md:hidden">
-            Agility CMS - Preview Mode
-          </span>
-          <span class="hidden md:inline">
-            Agility CMS - Viewing Site In Preview Mode
-          </span>
+<div class="bg-agility relative px-8 text-gray-200">
+  <div class="flex justify-between items-center max-w-screen-xl mx-auto">
+    <div class="flex items-center">
+      <span class="p-2 rounded-lg mr-4">
+        <a
+          href="https://www.agilitycms.com"
+          target="_blank"
+          rel="noreferrer"
+          title="Agility CMS"
+        >
+          <img
+            src="https://static.agilitycms.com/brand/agility-triangle-yellow.svg"
+            alt="Agility CMS"
+            class="w-5 h-5 block md:hidden"
+          />
+          <img
+            src="/assets/images/agility-preview-logo.svg"
+            alt="Agility CMS"
+            class="h-5 w-20 hidden md:block"
+          />
+        </a>
+      </span>
+      <div class="mr-4">
+        <a
+          href="https://help.agilitycms.com/hc/en-us"
+          target="_blank"
+          rel="noreferrer"
+          title="Help Center"
+          class="text-2xl"
+        >
+          <div class="flex items-center">
+            <fa-icon class="tmr-2" [icon]="faInfoCircle"></fa-icon>
+            <p class="hidden md:block text-sm">Help Center</p>
+          </div>
+        </a>
+      </div>
+      <div>
+        <a
+          href="https://github.com/agility/agilitycms-nuxtjs-starter"
+          target="_blank"
+          rel="noreferrer"
+          title="View on GitHub"
+          class="text-2xl"
+        >
+          <div class="flex items-center">
+            <fa-icon class="tmr-2" [icon]="faGithub"></fa-icon>
+            <p class="hidden md:block text-sm">View on GitHub</p>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="py-4">
+      <div *ngIf="isPreview">
+        <p class="text-xs md:text-base">
+          Previewing <span class="font-bold">Latest</span> Changes
         </p>
       </div>
-
-      <div class="order-2 flex-shrink-0 sm:order-3 sm:ml-3">
-        <button (click)="toggle()" type="button" class="-mr-1 flex p-2 rounded-md hover:bg-indigo-500 focus:outline-none focus:bg-indigo-500 sm:-mr-2 transition ease-in-out duration-150" aria-label="Dismiss">
-          <!-- Heroicon name: x -->
-          <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
+      <div *ngElse>
+        <p class="text-xs md:text-base">
+          Viewing <span class="font-bold">Published</span> Content
+        </p>
       </div>
     </div>
   </div>

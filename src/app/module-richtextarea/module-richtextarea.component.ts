@@ -1,25 +1,29 @@
 import { Component, OnInit, Input } from '@angular/core';
-import {IAgilityModuleComponent } from "../../agility/agility.module.icomponent"
+import { IAgilityModuleComponent } from '../../agility/agility.module.icomponent';
 
 @Component({
   selector: 'app-module-richtextarea',
   template: `
-    <section class="my-6 prose prose-sm sm:prose lg:prose-lg xl:prose-xl max-w-full" [innerHTML]="textblob"></section>
+    <div class="relative px-8">
+      <div class="max-w-2xl mx-auto my-12 md:mt-18 lg:mt-20">
+        <div
+          class="prose max-w-full mx-auto"
+          v-html="item.fields.textblob"
+          [innerHTML]="textblob"
+        ></div>
+      </div>
+    </div>
   `,
-  styles: [
-  ]
+  styles: [],
 })
 export class ModuleRichTextAreaComponent implements IAgilityModuleComponent {
-	@Input() data: any;
+  @Input() data: any;
 
-	public textblob:string
+  public textblob: string;
 
-  constructor() {
-
-   }
+  constructor() {}
 
   ngOnInit(): void {
-	this.textblob = this.data.item.fields.textblob
+    this.textblob = this.data.item.fields.textblob;
   }
-
 }
