@@ -1,0 +1,8 @@
+// Get these values from the API Keys page in Agility Settings => https://manager.agilitycms.com/settings/apikeys
+export const environment = {
+	production: true,
+	AGILITY_GUID: "",
+	AGILITY_API_KEY: "",
+	AGILITY_LANGUAGE_CODE:"en-us",
+	AGILITY_CHANNEL:"website"
+};
