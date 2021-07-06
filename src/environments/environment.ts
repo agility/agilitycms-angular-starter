@@ -2,11 +2,12 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-// Get these values from the API Keys page in Agility Settings => https://manager.agilitycms.com/settings/apikeys
+// Get these values from your API Keys page in Agility Settings => https://manager.agilitycms.com/settings/apikeys
 export const environment = {
   production: false,
-  AGILITY_GUID: '',
-  AGILITY_API_KEY: '',
+  AGILITY_GUID: 'e13c7b01-u',
+  AGILITY_API_KEY:
+    'AngularPreview.6617c54b87588d941d32416a9dfb1e8fd9e556439984e8236ac75896e47ae02a',
   AGILITY_LANGUAGE_CODE: 'en-us',
   AGILITY_CHANNEL: 'website',
 };
