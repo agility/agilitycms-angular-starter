@@ -50,16 +50,18 @@
       </div>
     </div>
     <div class="py-4">
-      <div *ngIf="isPreview">
+      <div *ngIf="isPreview; else elseBlock">
         <p class="text-xs md:text-base">
           Previewing <span class="font-bold">Latest</span> Changes
         </p>
       </div>
-      <div *ngElse>
-        <p class="text-xs md:text-base">
-          Viewing <span class="font-bold">Published</span> Content
-        </p>
-      </div>
+      <ng-template #elseBlock>
+        <div>
+          <p class="text-xs md:text-base">
+            Viewing <span class="font-bold">Published</span> Content
+          </p>
+        </div>
+      </ng-template>
     </div>
   </div>
 </div>

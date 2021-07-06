@@ -5,6 +5,7 @@ import { ModulePostsListingComponent } from '../app/module-posts-listing/module-
 import { ModulePostDetailsComponent } from '../app/module-post-details/module-post-details.component';
 import { ModuleTextBlockWithImage } from '../app/module-textblockwithimage/module-textblockwithimage.component';
 import { ModuleFeaturedPost } from '../app/module-featuredpost/module-featuredpost.component';
+import { ModuleHeading } from 'src/app/module-heading/module-heading.component';
 
 @Injectable({
   providedIn: 'root',
@@ -28,6 +29,8 @@ export class ModuleService {
         return ModuleTextBlockWithImage;
       case 'featuredpost':
         return ModuleFeaturedPost;
+      case 'heading':
+        return ModuleHeading;
     }
 
     console.warn(`Module component not found for ${moduleName}.`);

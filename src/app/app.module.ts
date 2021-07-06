@@ -21,6 +21,7 @@ import { ModulePostDetailsComponent } from './module-post-details/module-post-de
 import { PreviewBarComponent } from './preview-bar/preview-bar.component';
 import { ModuleTextBlockWithImage } from './module-textblockwithimage/module-textblockwithimage.component';
 import { ModuleFeaturedPost } from './module-featuredpost/module-featuredpost.component';
+import { ModuleHeading } from './module-heading/module-heading.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { ModuleFeaturedPost } from './module-featuredpost/module-featuredpost.co
     ModulePostDetailsComponent,
     ModuleTextBlockWithImage,
     ModuleFeaturedPost,
+    ModuleHeading,
     PreviewBarComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, FontAwesomeModule],

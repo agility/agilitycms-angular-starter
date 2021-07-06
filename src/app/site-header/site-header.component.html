@@ -1,5 +1,3 @@
-<app-preview-bar *ngIf="isPreview"></app-preview-bar>
-
 <ng-template [ngIf]="siteHeader !== null">
   <header class="relative w-full mx-auto bg-white px-8">
     <div class="max-w-screen-xl mx-auto">
@@ -9,8 +7,7 @@
           justify-between
           items-center
           py-6
-          md:justify-start
-          md:space-x-10
+          md:justify-start md:space-x-10
         "
       >
         <div class="lg:w-0 lg:flex-1">
@@ -37,11 +34,8 @@
               p-2
               rounded-md
               text-gray-400
-              hover:text-gray-500
-              hover:bg-gray-100
-              focus:outline-none
-              focus:bg-gray-100
-              focus:text-gray-500
+              hover:text-gray-500 hover:bg-gray-100
+              focus:outline-none focus:bg-gray-100 focus:text-gray-500
               transition
               duration-150
               ease-in-out
@@ -74,8 +68,7 @@
               hover:text-primary-500
               border-transparent border-b-2
               hover:border-primary-500 hover:border-b-primary hover:border-b-2
-              focus:outline-none
-              focus:text-primary-500
+              focus:outline-none focus:text-primary-500
               transition
               duration-300
             "
@@ -122,11 +115,8 @@
                     p-2
                     rounded-md
                     text-gray-400
-                    hover:text-gray-500
-                    hover:bg-gray-100
-                    focus:outline-none
-                    focus:bg-gray-100
-                    focus:text-gray-500
+                    hover:text-gray-500 hover:bg-gray-100
+                    focus:outline-none focus:bg-gray-100 focus:text-gray-500
                     transition
                     duration-300
                   "
