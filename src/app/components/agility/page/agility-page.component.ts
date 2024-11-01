@@ -2,7 +2,7 @@ import { Component, NgIterable, OnInit, Inject, PLATFORM_ID } from '@angular/cor
 import { Location, isPlatformBrowser, isPlatformServer } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 
-import { AgilityService } from '../../services/agility.service';
+import { AgilityService } from '../../../services/agility.service';
 import { Title } from '@angular/platform-browser';
 import { isDevMode } from '@angular/core';
 

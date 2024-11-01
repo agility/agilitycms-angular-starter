@@ -1,7 +1,7 @@
 import { Component, importProvidersFrom } from '@angular/core';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { AppModule } from './app.module';
-import { PreviewBarComponent } from './components/preview-bar/preview-bar.component';
+import { PreviewBarComponent } from './components/agility/preview-bar/preview-bar.component';
 import { CommonModule } from '@angular/common';
 
 @Component({

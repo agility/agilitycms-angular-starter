@@ -8,7 +8,11 @@ import AppServerModule from './src/main.server';
 import { AgilityService } from './src/app/services/agility.service';
 import { InjectionToken } from '@angular/core';
 
-const agilityService = new AgilityService();
+import { CookieService } from 'ngx-cookie-service';
+
+const cookieService = new CookieService(document as unknown as Document, null);
+const agilityService = new AgilityService(cookieService);
+
 export const ROUTE_CONTENT = new InjectionToken<any>('ROUTE_CONTENT'); // For safer content injection
 
 export function app(): express.Express {
@@ -30,6 +34,9 @@ export function app(): express.Express {
 
     try {
       // Fetch content dynamically based on the route
+     
+
+
       const content = await fetchContentForRoute(req.originalUrl);
 
       const html = await commonEngine.render({

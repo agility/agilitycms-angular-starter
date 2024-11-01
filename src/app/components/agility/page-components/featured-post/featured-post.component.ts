@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { htmlDecode } from 'js-htmlencode';
-import { IAgilityModuleComponent } from '../../../services/agility.module.icomponent';
-import { AgilityService } from '../../../services/agility.service';
+import { IAgilityModuleComponent } from '../../../../services/agility.module.icomponent';
+import { AgilityService } from '../../../../services/agility.service';
 
 @Component({
   selector: 'app-module-featuredpost',

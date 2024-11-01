@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { IAgilityModuleComponent } from '../../../services/agility.module.icomponent';
-import { AgilityService } from '../../../services/agility.service';
+import { IAgilityModuleComponent } from '../../../../services/agility.module.icomponent';
+import { AgilityService } from '../../../../services/agility.service';
 import { htmlDecode } from 'js-htmlencode';
 
 @Component({

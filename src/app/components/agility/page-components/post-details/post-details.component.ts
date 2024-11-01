@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { IAgilityModuleComponent } from '../../../services/agility.module.icomponent';
+import { IAgilityModuleComponent } from '../../../../services/agility.module.icomponent';
 
 @Component({
   selector: 'app-module-post-details',

@@ -1,114 +1,104 @@
 import { Injectable } from '@angular/core';
-import { isDevMode } from '@angular/core';
 import agilityFetch from '@agility/content-fetch';
 import { environment } from '../../environments/environment';
+import { CookieService } from 'ngx-cookie-service';
 
-type ApiClient = any; // Temporary type definition
+type ApiClient = any;
 
 @Injectable({
     providedIn: 'root',
 })
 export class AgilityService {
-    private agilityClient: ApiClient = null;
+    private agilityClient: ApiClient | null = null;
     private channelName = environment.AGILITY_SITEMAP;
     private languageCode: string = environment.AGILITY_LOCALE;
+    private previewCookieName = 'previewmode';
 
-    private siteMapFlat: Promise<any> = Promise.resolve(null);
-    private siteMapNested: Promise<any> = Promise.resolve(null);
-    private siteHeader: any = null;
-    private siteFooter: any = null;
+    constructor(private cookieService: CookieService) {
+        console.log('AgilityService initialized');
+    }
 
-    constructor() {
-        const isPreview: boolean = isDevMode(); // Temporary value
+    private getApiClient(): ApiClient {
+        if (!this.agilityClient) {
+            const isPreview = this.isPreviewMode();
+            const apiKey = isPreview ? environment.AGILITY_API_PREVIEW_KEY : environment.AGILITY_API_FETCH_KEY;
+            
+            this.agilityClient = agilityFetch.getApi({
+                guid: environment.AGILITY_GUID,
+                apiKey: apiKey,
+                isPreview,
+            });
 
-        // Build the correct api client based on preview or dev mode
-        this.agilityClient = agilityFetch.getApi({
-            guid: environment.AGILITY_GUID,
-            apiKey: environment.AGILITY_API_KEY,
-            isPreview,
-        });
-        // console.log('agilityClient', this.agilityClient);
+            console.log(`Agility Client created with isPreview: ${isPreview}`);
+        }
+        return this.agilityClient;
     }
 
     getSitemapFlat(): Promise<any> {
-        this.siteMapFlat = this.agilityClient.getSitemapFlat({
+        return this.getApiClient().getSitemapFlat({
             languageCode: this.languageCode,
             channelName: this.channelName,
-        }).then((result: any) => {
-            this.siteMapFlat = Promise.resolve(result);
-            return result;
         });
-        return this.siteMapFlat;
     }
 
     getSitemapNested(): Promise<any> {
-        this.siteMapNested = this.agilityClient.getSitemapNested({
+        return this.getApiClient().getSitemapNested({
             languageCode: this.languageCode,
             channelName: this.channelName,
-        }).then((result: any) => {
-            this.siteMapNested = Promise.resolve(result);
-            return result;
         });
-        return this.siteMapNested;
     }
 
     getPage(pageID: number): Promise<any> {
-        return this.agilityClient.getPage({
+        return this.getApiClient().getPage({
             languageCode: this.languageCode,
             pageID,
-        }).then((result: any) => {
-            return result;
         });
     }
 
     getHeader(): Promise<any> {
-        if (this.siteHeader !== null) return this.siteHeader;
-       
-        this.siteHeader = this.agilityClient.getContentList({
+        return this.getApiClient().getContentList({
             languageCode: this.languageCode,
             referenceName: 'siteheader',
-        }).then((lstRes: any) => {
-            if (lstRes?.items?.length > 0) {
-                this.siteHeader = Promise.resolve(lstRes.items[0]);
-                return lstRes.items[0];
-            }
-            return null;
-        });
-        return this.siteHeader;
+        }).then((lstRes: any) => lstRes?.items[0] || null);
     }
 
     getFooter(): Promise<any> {
-        if (this.siteFooter !== null) return this.siteFooter;
-
-        this.siteFooter = this.agilityClient.getContentList({
+        return this.getApiClient().getContentList({
             languageCode: this.languageCode,
             referenceName: 'sitefooter',
             expandAllContentLinks: true,
-        }).then((lstRes: any) => {
-            if (lstRes?.items?.length > 0) {
-                this.siteFooter = Promise.resolve(lstRes.items[0]);
-                return lstRes.items[0];
-            }
-            return null;
-        });
-        return this.siteFooter;
+        }).then((lstRes: any) => lstRes?.items[0] || null);
     }
 
     getContentList(referenceName: string): Promise<any> {
-        return this.agilityClient.getContentList({
+        return this.getApiClient().getContentList({
             languageCode: this.languageCode,
             referenceName,
-        }).then((result: any) => {
-            return result;
         });
     }
 
     getContentItem(contentID: number): Promise<any> {
-        return this.agilityClient.getContentItem({
+        return this.getApiClient().getContentItem({
             languageCode: this.languageCode,
             contentID,
-        }).then((result: any) => {
-            return result;
         });
+    }
+
+    enterPreviewMode(token?: string): void {
+        this.cookieService.set(this.previewCookieName, token || 'true', { path: '/', expires: 1 });
+        this.agilityClient = null; // Clear the client so it reinitializes with preview mode
+    }
+
+    exitPreviewMode(): void {
+        this.cookieService.delete(this.previewCookieName, '/');
+        this.agilityClient = null; // Clear the client so it reinitializes without preview mode
+    }
+    
+    getPreviewModeCookie(): string | null {
+        return this.cookieService.get(this.previewCookieName) || null;
+    }
+
+    isPreviewMode(): boolean {
+        return this.getPreviewModeCookie() !== null;
     }
 }
