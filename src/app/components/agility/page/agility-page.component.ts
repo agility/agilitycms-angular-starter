@@ -5,6 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AgilityService } from '../../../services/agility.service';
 import { Title } from '@angular/platform-browser';
 import { isDevMode } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 interface SitemapItem {
   pageID: number;
@@ -13,11 +14,7 @@ interface SitemapItem {
 }
 
 interface Page {
-  zones?:{[key: string]: any};
-}
-
-interface Zone {
-  value: NgIterable<any> | null;
+  zones?: { [key: string]: any };
 }
 
 @Component({
@@ -31,7 +28,7 @@ export class AgilityPageComponent implements OnInit {
   public pageStatus: number = 0;
   public dynamicPageItem: any = null;
   public isPreview: boolean;
-  // public zone: Zone = { value: null };
+  private contentReloadSubscription: Subscription | null = null;
 
   constructor(
     private location: Location,
@@ -43,103 +40,86 @@ export class AgilityPageComponent implements OnInit {
     this.isPreview = isDevMode();
   }
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
+    // Initial page load
+    this.loadPage();
+
+    // Subscribe to content reloads
+    this.contentReloadSubscription = this.agilityService.contentReloadObservable.subscribe(() => {
+      console.log('Content reload triggered, reloading page content...');
+      this.loadPage(); // Re-fetch the page content
+    });
+  }
+
+  private async loadPage(): Promise<void> {
     let currentPath: string;
 
     if (isPlatformBrowser(this.platformId)) {
-        // Client-side execution
-        const currentLocation = location.href;
-        console.log('Client-side location: ', currentLocation);
-        currentPath = location.pathname;
+      // Client-side execution
+      currentPath = location.pathname;
 
-        if (currentPath.indexOf('?') !== -1) {
-            currentPath = currentPath.substring(0, currentPath.indexOf('?'));
-        }
+      if (currentPath.includes('?')) {
+        currentPath = currentPath.split('?')[0];
+      }
     } else {
-        // Server-side execution
-        console.log('Server-side location: ', this.location.path());
-        currentPath = this.location.path(); // Use Angular's Location service for SSR
+      // Server-side execution
+      currentPath = this.location.path();
 
-        if (currentPath.indexOf('?') !== -1) {
-            currentPath = currentPath.substring(0, currentPath.indexOf('?'));
-        }
+      if (currentPath.includes('?')) {
+        currentPath = currentPath.split('?')[0];
+      }
     }
 
     if (currentPath === '/') {
-        // Default path handling
-        const sitemapFlat = await this.agilityService.getSitemapFlat();
-        [currentPath] = Object.keys(sitemapFlat);
+      // Default path handling
+      const sitemapFlat = await this.agilityService.getSitemapFlat();
+      [currentPath] = Object.keys(sitemapFlat);
     }
 
     try {
-        const sitemapFlat = await this.agilityService.getSitemapFlat();
-        this.pageInSitemap = sitemapFlat[currentPath];
+      const sitemapFlat = await this.agilityService.getSitemapFlat();
+      this.pageInSitemap = sitemapFlat[currentPath];
 
-        if (!this.pageInSitemap) {
-            this.pageStatus = 404;
-            console.error(`404 - Page ${currentPath} not found in sitemap.`);
-            return;
-        }
+      if (!this.pageInSitemap) {
+        this.pageStatus = 404;
+        console.error(`404 - Page ${currentPath} not found in sitemap.`);
+        return;
+      }
 
-        // Retrieve the page object
-        this.page = await this.agilityService.getPage(this.pageInSitemap.pageID);
-        console.log('Page: ', this.page);
+      // Retrieve the page object
+      this.page = await this.agilityService.getPage(this.pageInSitemap.pageID);
 
+      if (this.page?.zones) {
+        Object.keys(this.page.zones).forEach((key) => {
+          this.page!.zones![key] = this.page!.zones![key] as any[];
+        });
+      }
 
-        if (this.page?.zones) {
-
-          console.log('page.zones: ', this.page.zones);
-          // Ensure each zone's value is treated as an array of any
-          Object.keys(this.page.zones).forEach((key) => {
-            this.page!.zones![key] = this.page!.zones![key] as any[];
-          });
-        }
-
-        // set the zone
-
-        // Ensure zones are present in the page object
-      //   if (this.page.zones) {
-      //     this.page.zones = this.page.zones;
-      // } else {
-      //     this.page.zones = {}; // Fallback in case zones aren't defined
-      // }
-
-
-      // if (this.page?.zones) {
-      //   console.log('MainContentZone: ', this.page.zones.MainContentZone);
-      //   this.zone.value = this.page.zones.MainContentZone as NgIterable<any> | null;
-      // }
-
-        if (!this.page) {
-            console.error(
-                `500 - Page ${currentPath} with id ${this.pageInSitemap.pageID} could not be loaded.`
-            );
-            this.pageStatus = 500;
-            return;
-        }
-
-        // Retrieve the dynamic page item if contentID is present
-        if (this.pageInSitemap.contentID) {
-            this.dynamicPageItem = await this.agilityService.getContentItem(
-                this.pageInSitemap.contentID
-            );
-        }
-
-        // Set the document title (only on the client)
-        if (isPlatformBrowser(this.platformId)) {
-            this.titleService.setTitle(this.pageInSitemap.title);
-        }
-
-        
-        this.pageStatus = 200;
-    } catch (error) {
-        console.error('An error occurred: ', error);
+      if (!this.page) {
+        console.error(`500 - Page ${currentPath} with id ${this.pageInSitemap.pageID} could not be loaded.`);
         this.pageStatus = 500;
-    }
-}
+        return;
+      }
 
-// get iterableZoneValue(): NgIterable<any> | null {
-//   console.log('Zone value: ', this.zone.value);
-//   return this.zone.value as NgIterable<any>;
-// }
+      // Retrieve the dynamic page item if contentID is present
+      if (this.pageInSitemap.contentID) {
+        this.dynamicPageItem = await this.agilityService.getContentItem(this.pageInSitemap.contentID);
+      }
+
+      // Set the document title (only on the client)
+      if (isPlatformBrowser(this.platformId)) {
+        this.titleService.setTitle(this.pageInSitemap.title);
+      }
+
+      this.pageStatus = 200;
+    } catch (error) {
+      console.error('An error occurred: ', error);
+      this.pageStatus = 500;
+    }
+  }
+
+  ngOnDestroy(): void {
+    // Clean up subscription to avoid memory leaks
+    this.contentReloadSubscription?.unsubscribe();
+  }
 }

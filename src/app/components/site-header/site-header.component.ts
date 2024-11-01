@@ -32,15 +32,11 @@ export class SiteHeaderComponent implements OnInit {
 
       // Get header content item
       const obj = await this.agilityService.getHeader();
-      
-      console.log('Header object:', obj);
 
-      // Check if obj and obj.fields are valid before accessing fields
       if (obj && obj.fields) {
-        this.siteHeader = obj.fields; // Assign fields only if obj is valid
+        this.siteHeader = obj.fields;
       } else {
-        console.error('Header object is null or does not have fields:', obj);
-        this.siteHeader = {}; // Set to an empty object or a default value
+        this.siteHeader = {};
       }
 
       // Get visible links in sitemap

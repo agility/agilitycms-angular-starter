@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import agilityFetch from '@agility/content-fetch';
 import { environment } from '../../environments/environment';
 import { CookieService } from 'ngx-cookie-service';
+import { Subject } from 'rxjs';
 
 type ApiClient = any;
 
@@ -13,9 +14,12 @@ export class AgilityService {
     private channelName = environment.AGILITY_SITEMAP;
     private languageCode: string = environment.AGILITY_LOCALE;
     private previewCookieName = 'previewmode';
+    private contentReloadSubject = new Subject<void>();
+
+    // Observable to notify components when content has been reloaded
+    contentReloadObservable = this.contentReloadSubject.asObservable();
 
     constructor(private cookieService: CookieService) {
-        console.log('AgilityService initialized');
     }
 
     private getApiClient(): ApiClient {
@@ -85,13 +89,17 @@ export class AgilityService {
     }
 
     enterPreviewMode(token?: string): void {
+        console.log('Entering preview mode');
         this.cookieService.set(this.previewCookieName, token || 'true', { path: '/', expires: 1 });
         this.agilityClient = null; // Clear the client so it reinitializes with preview mode
+        this.contentReloadSubject.next();
     }
 
     exitPreviewMode(): void {
+        console.log('Exiting preview mode');
         this.cookieService.delete(this.previewCookieName, '/');
         this.agilityClient = null; // Clear the client so it reinitializes without preview mode
+        this.contentReloadSubject.next();
     }
     
     getPreviewModeCookie(): string | null {
