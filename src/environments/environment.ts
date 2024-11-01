@@ -8,8 +8,8 @@ export const environment = {
   AGILITY_GUID: 'e13c7b01-u',
   AGILITY_API_KEY:
     'AngularPreview.6617c54b87588d941d32416a9dfb1e8fd9e556439984e8236ac75896e47ae02a',
-  AGILITY_LANGUAGE_CODE: 'en-us',
-  AGILITY_CHANNEL: 'website',
+  AGILITY_LOCALE: 'en-us',
+  AGILITY_SITEMAP: 'website',
 };
 
 /*

@@ -1,12 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
-import { AgilityPageComponent } from "./agility-page/agility-page.component"
+import { AgilityPageComponent } from "./components/agility-page/agility-page.component"
 
 const routes: Routes = [
 	{ path: '**',  component: AgilityPageComponent }
 ];
-
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

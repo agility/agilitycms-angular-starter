@@ -1,10 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, importProvidersFrom } from '@angular/core';
+import { RouterModule, RouterOutlet } from '@angular/router';
+import { AppModule } from './app.module';
+import { PreviewBarComponent } from './components/preview-bar/preview-bar.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  title = 'agilitycms-angular-starter';
+  title = 'AgilityCMS Angular SSR';
 }

@@ -4,10 +4,15 @@
 /src/environments/.environment.prod.ts 
 /src/environments/.environment.ts
 
+
 # compiled output
 /dist
 /tmp
 /out-tsc
+/angular
+/cache
+.angular/cache
+/bak
 # Only exists if Bazel was run
 /bazel-out
 

@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "agilitycms-angular-starter": {
+    "agilitycms-angular-starter-ssr": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -11,109 +11,127 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/",
+            "outputPath": "dist/agilitycms-angular-starter-ssr",
             "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
+            "browser": "src/main.ts",
+            "polyfills": [
+              "zone.js"
+            ],
             "tsConfig": "tsconfig.app.json",
-            "assets": ["src/_redirects", "src/favicon.png", "src/assets"],
-            "styles": ["src/styles.css"],
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "public"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets",
+                "output": "/assets"
+              }
+            ],
+            "styles": [
+              "src/styles.css"
+            ],
             "scripts": [],
-            "vendorChunk": true,
-            "extractLicenses": false,
-            "buildOptimizer": false,
-            "sourceMap": true,
-            "optimization": false,
-            "namedChunks": true
+            "server": "src/main.server.ts",
+            "prerender": true,
+            "ssr": {
+              "entry": "server.ts"
+            },
+            "allowedCommonJsDependencies": [
+              "@agility/content-fetch"
+            ]
           },
           "configurations": {
             "production": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "aot": true,
-              "buildOptimizer": true,
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
+                  "maximumWarning": "2kB",
+                  "maximumError": "4kB"
                 }
-              ]
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
             }
           },
-          "defaultConfiguration": ""
+          "defaultConfiguration": "production"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "agilitycms-angular-starter:build"
-          },
           "configurations": {
             "production": {
-              "browserTarget": "agilitycms-angular-starter:build:production"
+              "buildTarget": "agilitycms-angular-starter-ssr:build:production"
+            },
+            "development": {
+              "buildTarget": "agilitycms-angular-starter-ssr:build:development"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "agilitycms-angular-starter:build"
-          }
+          "builder": "@angular-devkit/build-angular:extract-i18n"
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
             "tsConfig": "tsconfig.spec.json",
-            "karmaConfig": "karma.conf.js",
-            "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["src/styles.css"],
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "public"
+              }
+            ],
+            "styles": [
+              "src/styles.css"
+            ],
             "scripts": []
           }
         },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+        "prerender": {
+          "builder": "@angular-devkit/build-angular:prerender",
           "options": {
-            "tsConfig": [
-              "tsconfig.app.json",
-              "tsconfig.spec.json",
-              "e2e/tsconfig.json"
-            ],
-            "exclude": ["**/node_modules/**"]
+            "browserTarget": "agilitycms-angular-starter-ssr:build:production",
+            "serverTarget": "agilitycms-angular-starter-ssr:server:production",
+            "routes": [
+              "/home",
+              "/blog",
+              "/blog/travel-photography-101",
+              "/blog/am-eh-zing-places-to-visit-in-canada",
+              "/blog/virtual-tours-ways-to-travel-from-home",
+              "/about"
+            ]
           }
         },
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
+        "server": {
+          "builder": "@angular-devkit/build-angular:server",
           "options": {
-            "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "agilitycms-angular-starter:serve"
+            "outputPath": "dist/agilitycms-angular-starter-ssr-server",
+            "main": "server.ts",
+            "tsConfig": "tsconfig.server.json"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "agilitycms-angular-starter:serve:production"
+              "outputHashing": "media"
             }
           }
         }
       }
     }
-  },
-  "defaultProject": "agilitycms-angular-starter"
+  }
 }
