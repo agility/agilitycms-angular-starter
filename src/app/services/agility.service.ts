@@ -22,12 +22,6 @@ export class AgilityService {
         private cookieService: CookieService,
         @Inject(PLATFORM_ID) private platformId: Object) {
         // Initialize CookieService conditionally based on the platform
-        if (isPlatformBrowser(this.platformId)) {
-          this.cookieService = new CookieService(document, PLATFORM_ID);
-        } else {
-          // Handle server-side scenario where document is not available
-          this.cookieService = new CookieService(null as unknown as Document, PLATFORM_ID);
-        }
       }
 
     // Observable to notify components when content has been reloaded
@@ -105,10 +99,14 @@ export class AgilityService {
     }
 
     enterPreviewMode(token?: string): void {
-        this.agilityClient = null; // Clear the client so it reinitializes with preview mode
+        this.agilityClient = null; // Clear the client to reinitialize with preview mode
         this.contentReloadSubject.next();
-        if(isPlatformBrowser(this.platformId) && this.cookieService) {
+    
+        if (isPlatformBrowser(this.platformId)) {
             this.cookieService.set(this.previewCookieName, token || 'true', { path: '/', expires: 1 });
+            console.log(`Preview cookie set: ${this.previewCookieName} = ${token || 'true'}`);
+        } else {
+            console.warn('Attempted to set cookie on the server side.');
         }
     }
 

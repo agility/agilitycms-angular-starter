@@ -89,7 +89,6 @@ export class AgilityPageComponent implements OnInit, OnDestroy {
       currentPath = '/home';
     }
 
-    console.log('currentPath->', currentPath);
 
     // Check TransferState cache for page data
     const cachedPage = this.transferState.get(PAGE_KEY, null);
