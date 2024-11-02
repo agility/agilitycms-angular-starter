@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "agilitycms-angular-starter-ssr": {
+    "agilitycms": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/agilitycms-angular-starter-ssr",
+            "outputPath": "dist/agilitycms",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -36,7 +36,10 @@
             ],
             "scripts": [],
             "server": "src/main.server.ts",
-            "prerender": true,
+            "prerender": {
+              "discoverRoutes": true,
+              "routesFile": "src/app/routing/agility-routes.txt"
+            },
             "ssr": {
               "entry": "server.ts"
             },
@@ -72,10 +75,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "agilitycms-angular-starter-ssr:build:production"
+              "buildTarget": "agilitycms:build:production"
             },
             "development": {
-              "buildTarget": "agilitycms-angular-starter-ssr:build:development"
+              "buildTarget": "agilitycms:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -101,34 +104,6 @@
               "src/styles.css"
             ],
             "scripts": []
-          }
-        },
-        "prerender": {
-          "builder": "@angular-devkit/build-angular:prerender",
-          "options": {
-            "browserTarget": "agilitycms-angular-starter-ssr:build:production",
-            "serverTarget": "agilitycms-angular-starter-ssr:server:production",
-            "routes": [
-              "/home",
-              "/blog",
-              "/blog/travel-photography-101",
-              "/blog/am-eh-zing-places-to-visit-in-canada",
-              "/blog/virtual-tours-ways-to-travel-from-home",
-              "/about"
-            ]
-          }
-        },
-        "server": {
-          "builder": "@angular-devkit/build-angular:server",
-          "options": {
-            "outputPath": "dist/agilitycms-angular-starter-ssr-server",
-            "main": "server.ts",
-            "tsConfig": "tsconfig.server.json"
-          },
-          "configurations": {
-            "production": {
-              "outputHashing": "media"
-            }
           }
         }
       }

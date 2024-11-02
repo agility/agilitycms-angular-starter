@@ -8,7 +8,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 // services
 import { AgilityService } from './services/agility.service';
-import { AgilityRouteReuseStrategy } from './services/agility-route-reuse-strategy';
+import { AgilityRouteReuseStrategy } from './routing/agility-route-reuse-strategy';
 
 // routing
 import { routes } from './app.routes';
@@ -22,14 +22,14 @@ import { SiteFooterComponent } from './components/site-footer/site-footer.compon
 import { PreviewBarComponent } from './components/agility/preview-bar/preview-bar.component';
 
 // page components
-import { AgilityPageComponent } from './components/agility/page/agility-page.component';
-import { AgilityModuleComponent } from './services/agility-module.component';
-import { ModuleRichTextAreaComponent } from './components/agility/page-components/rich-text-area/richtextarea.component';
-import { ModulePostsListingComponent } from './components/agility/page-components/posts-listing/posts-listing.component';
-import { ModulePostDetailsComponent } from './components/agility/page-components/post-details/post-details.component';
-import { ModuleTextBlockWithImage } from './components/agility/page-components/text-block-with-image/textblockwithimage.component';
-import { ModuleFeaturedPost } from './components/agility/page-components/featured-post/featured-post.component';
-import { ModuleHeading } from './components/agility/page-components/heading/heading.component';
+import { AgilityPageComponent } from './components/agility/pages/agility-page.component';
+import { AgilityModuleComponent } from './components/agility/pages/components/agility-component.component';
+import { ModuleRichTextAreaComponent } from './components/agility/pages/components/rich-text-area/richtextarea.component';
+import { ModulePostsListingComponent } from './components/agility/pages/components/posts-listing/posts-listing.component';
+import { ModulePostDetailsComponent } from './components/agility/pages/components/post-details/post-details.component';
+import { ModuleTextBlockWithImage } from './components/agility/pages/components/text-block-with-image/textblockwithimage.component';
+import { ModuleFeaturedPost } from './components/agility/pages/components/featured-post/featured-post.component';
+import { ModuleHeading } from './components/agility/pages/components/heading/heading.component';
 import { CookieService } from 'ngx-cookie-service';
 
 

@@ -1,44 +1,39 @@
+// server.ts
 import { APP_BASE_HREF } from '@angular/common';
 import { CommonEngine } from '@angular/ssr';
 import express from 'express';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve } from 'node:path';
-import AppServerModule from './src/main.server';
-
+import { InjectionToken, Injector, PLATFORM_ID } from '@angular/core';
 import { AgilityService } from './src/app/services/agility.service';
-import { InjectionToken } from '@angular/core';
-
+import AppServerModule from './src/main.server';
 import { CookieService } from 'ngx-cookie-service';
 
-const cookieService = new CookieService(document as unknown as Document, null);
-const agilityService = new AgilityService(cookieService);
+// Define a token to inject route content
+export const ROUTE_CONTENT = new InjectionToken<any>('ROUTE_CONTENT');
 
-export const ROUTE_CONTENT = new InjectionToken<any>('ROUTE_CONTENT'); // For safer content injection
-
-export function app(): express.Express {
+export function createServer(): express.Express {
+  console.log('Creating server...');
   const server = express();
   const serverDistFolder = dirname(fileURLToPath(import.meta.url));
   const browserDistFolder = resolve(serverDistFolder, '../browser');
   const indexHtml = join(serverDistFolder, 'index.server.html');
   const commonEngine = new CommonEngine();
 
+  // Set view engine and static assets
   server.set('view engine', 'html');
   server.set('views', browserDistFolder);
-
-  // Serve static files from /browser
   server.use(express.static(browserDistFolder, { maxAge: '1y' }));
+
+  // Initialize AgilityService with PLATFORM_ID set to 'server'
+  const agilityService = new AgilityService(new CookieService(null as unknown as Document, PLATFORM_ID), 'server');
 
   // Dynamic SSR route handling
   server.get('*', async (req, res, next) => {
     const url = `${req.protocol}://${req.headers.host}${req.originalUrl}`;
-
     try {
-      // Fetch content dynamically based on the route
-     
-
-
-      const content = await fetchContentForRoute(req.originalUrl);
-
+      console.log('Request for route:', req.originalUrl);
+      const content = await fetchContentForRoute(req.originalUrl, agilityService);
       const html = await commonEngine.render({
         bootstrap: AppServerModule,
         documentFilePath: indexHtml,
@@ -46,12 +41,12 @@ export function app(): express.Express {
         publicPath: browserDistFolder,
         providers: [
           { provide: APP_BASE_HREF, useValue: req.baseUrl },
-          { provide: ROUTE_CONTENT, useValue: content }, // Safely inject dynamic content
+          { provide: ROUTE_CONTENT, useValue: content },
         ],
       });
-
       res.send(html);
     } catch (error) {
+      console.error('Error processing request:', error);
       next(error);
     }
   });
@@ -59,15 +54,18 @@ export function app(): express.Express {
   return server;
 }
 
-// Utility function to fetch content based on URL
-async function fetchContentForRoute(url: string) {
+async function fetchContentForRoute(url: string, agilityService: AgilityService) {
   try {
     const sitemap = await agilityService.getSitemapFlat();
+    const pageUrl = url === '/' ? '/home' : url;
+    const pageKey = Object.keys(sitemap).find(key => sitemap[key].path === pageUrl);
+    
+    if (!pageKey) {
+      console.error(`Page not found for URL: ${url}`);
+      throw new Error(`Page not found for URL: ${url}`);
+    }
 
-    const page: any = Object.keys(sitemap).find((key) => sitemap[key].path === url);
-    if (!page) throw new Error(`Page not found for URL: ${url}`);
-
-    const pageContent = await agilityService.getPage(page.pageID);
+    const pageContent = await agilityService.getPage(sitemap[pageKey].pageID);
     return pageContent;
   } catch (error) {
     console.error(`Error fetching content for route ${url}:`, error);
@@ -75,12 +73,15 @@ async function fetchContentForRoute(url: string) {
   }
 }
 
-function run(): void {
+export function run(AppServerModule: any): express.Express {
+  const server = createServer();
   const port = process.env['PORT'] || 4000;
-  const server = app();
+  
   server.listen(port, () => {
     console.log(`Node Express server listening on http://localhost:${port}`);
   });
+
+  return server;
 }
 
-run();
+run(AppServerModule);

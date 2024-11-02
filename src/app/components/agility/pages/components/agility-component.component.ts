@@ -1,12 +1,11 @@
 import { Component, Input, OnInit, ViewChild, ComponentFactoryResolver, OnDestroy } from '@angular/core';
 
-import { IAgilityModuleComponent } from "./agility.module.icomponent"
-import { ModuleDirective } from "../module.directive"
-import { ModuleService } from './module.service';
+import { IAgilityModuleComponent } from "./agility-component.icomponent"
+import { ModuleDirective } from "../../../../module.directive"
+import { AgilityComponentService } from '../../../../services/agility.component.service';
 
 
 @Component({
-
   selector: 'app-agility-module',
   template: `
 	<ng-template agilityModule></ng-template>
@@ -25,7 +24,7 @@ export class AgilityModuleComponent implements OnInit {
 
   constructor(
 	  private componentFactoryResolver: ComponentFactoryResolver,
-	  private moduleService:ModuleService
+	  private agilityComponentService:AgilityComponentService
 	) {
 		this.loaded = false
 	 }
@@ -40,7 +39,7 @@ export class AgilityModuleComponent implements OnInit {
 	let moduleName:any = this.moduleObj.module
 
 	//get the module type from our module service
-	let moduleType = this.moduleService.getModule(moduleName)
+	let moduleType = this.agilityComponentService.getModule(moduleName)
 	if (moduleType == null) {
 		console.warn(`No module found for ${moduleName}`)
 		return

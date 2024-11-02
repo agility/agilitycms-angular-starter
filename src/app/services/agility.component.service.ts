@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 
-import { ModuleRichTextAreaComponent } from '../components/agility/page-components/rich-text-area/richtextarea.component';
-import { ModulePostsListingComponent } from '../components/agility/page-components/posts-listing/posts-listing.component';
-import { ModulePostDetailsComponent } from '../components/agility/page-components/post-details/post-details.component';
-import { ModuleTextBlockWithImage } from '../components/agility/page-components/text-block-with-image/textblockwithimage.component';
-import { ModuleFeaturedPost } from '../components/agility/page-components/featured-post/featured-post.component';
-import { ModuleHeading } from '../components/agility/page-components/heading/heading.component';
+import { ModuleRichTextAreaComponent } from '../components/agility/pages/components/rich-text-area/richtextarea.component';
+import { ModulePostsListingComponent } from '../components/agility/pages/components/posts-listing/posts-listing.component';
+import { ModulePostDetailsComponent } from '../components/agility/pages/components/post-details/post-details.component';
+import { ModuleTextBlockWithImage } from '../components/agility/pages/components/text-block-with-image/textblockwithimage.component';
+import { ModuleFeaturedPost } from '../components/agility/pages/components/featured-post/featured-post.component';
+import { ModuleHeading } from '../components/agility/pages/components/heading/heading.component';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +14,7 @@ import { ModuleHeading } from '../components/agility/page-components/heading/hea
 /**
  * Use this service to define all of the components that work as Agility Modules
  */
-export class ModuleService {
+export class AgilityComponentService {
   constructor() {}
 
   getModule(moduleName: string) {

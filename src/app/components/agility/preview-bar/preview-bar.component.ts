@@ -19,8 +19,6 @@ export class PreviewBarComponent implements OnInit {
     this.isPreview = agilityService.isPreviewMode();
     this.isDevMode = isDevMode();
   }
-
-
   togglePreviewMode() {
     if (this.isPreview) {
       this.agilityService.exitPreviewMode();
@@ -30,8 +28,6 @@ export class PreviewBarComponent implements OnInit {
       this.isPreview = true;
     }
   }
-  
-
   toggle() {
     this.visible = !this.visible;
   }

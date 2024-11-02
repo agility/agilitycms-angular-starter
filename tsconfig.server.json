@@ -2,10 +2,24 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./dist/server",
-    "module": "commonjs",
+    "module": "ES2022",
     "target": "ES2022",
-    "lib": ["ES2022"],
-    "types": ["node"]
+    "lib": [
+      "ES2022",
+      "DOM"
+    ],
+    "types": [
+      "node"
+    ]
   },
-  "include": ["server/**/*.ts", "prerender-routes.ts"]
+  "include": [
+    "server/**/*.ts",
+    "server.ts",
+    "src/app/routing/agility-routes.txt",
+    "src/environments/environment.ts",
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ] // You can also exclude environment files if necessary
 }

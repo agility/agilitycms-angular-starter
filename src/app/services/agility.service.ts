@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import agilityFetch from '@agility/content-fetch';
 import { environment } from '../../environments/environment';
 import { CookieService } from 'ngx-cookie-service';
 import { Subject } from 'rxjs';
+import { isPlatformBrowser } from '@angular/common';
 
 type ApiClient = any;
 
@@ -15,12 +16,27 @@ export class AgilityService {
     private languageCode: string = environment.AGILITY_LOCALE;
     private previewCookieName = 'previewmode';
     private contentReloadSubject = new Subject<void>();
+    // private cookieService?: CookieService;
+
+    constructor(
+        private cookieService: CookieService,
+        @Inject(PLATFORM_ID) private platformId: Object) {
+        // Initialize CookieService conditionally based on the platform
+        if (isPlatformBrowser(this.platformId)) {
+          this.cookieService = new CookieService(document, PLATFORM_ID);
+        } else {
+          // Handle server-side scenario where document is not available
+          this.cookieService = new CookieService(null as unknown as Document, PLATFORM_ID);
+        }
+      }
 
     // Observable to notify components when content has been reloaded
     contentReloadObservable = this.contentReloadSubject.asObservable();
 
-    constructor(private cookieService: CookieService) {
-    }
+    // constructor(private cookieService: CookieService) {
+
+
+    // }
 
     private getApiClient(): ApiClient {
         if (!this.agilityClient) {
@@ -89,21 +105,27 @@ export class AgilityService {
     }
 
     enterPreviewMode(token?: string): void {
-        console.log('Entering preview mode');
-        this.cookieService.set(this.previewCookieName, token || 'true', { path: '/', expires: 1 });
         this.agilityClient = null; // Clear the client so it reinitializes with preview mode
         this.contentReloadSubject.next();
+        if(isPlatformBrowser(this.platformId) && this.cookieService) {
+            this.cookieService.set(this.previewCookieName, token || 'true', { path: '/', expires: 1 });
+        }
     }
 
     exitPreviewMode(): void {
-        console.log('Exiting preview mode');
-        this.cookieService.delete(this.previewCookieName, '/');
+        
         this.agilityClient = null; // Clear the client so it reinitializes without preview mode
         this.contentReloadSubject.next();
+        if(isPlatformBrowser(this.platformId) && this.cookieService){
+            this.cookieService.delete(this.previewCookieName, '/');
+        }
     }
     
     getPreviewModeCookie(): string | null {
-        return this.cookieService.get(this.previewCookieName) || null;
+        if (isPlatformBrowser(this.platformId) && this.cookieService) {
+            return this.cookieService.get(this.previewCookieName) || null;
+        }
+        return null;
     }
 
     isPreviewMode(): boolean {

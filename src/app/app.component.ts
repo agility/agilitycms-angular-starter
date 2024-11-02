@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
+
 import { isPlatformBrowser } from '@angular/common';
 import { AgilityService } from './services/agility.service';
 import { filter } from 'rxjs/operators';
