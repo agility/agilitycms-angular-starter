@@ -16,21 +16,13 @@ export class AgilityService {
     private languageCode: string = environment.AGILITY_LOCALE;
     private previewCookieName = 'previewmode';
     private contentReloadSubject = new Subject<void>();
-    // private cookieService?: CookieService;
 
     constructor(
         private cookieService: CookieService,
         @Inject(PLATFORM_ID) private platformId: Object) {
-        // Initialize CookieService conditionally based on the platform
-      }
+    }
 
-    // Observable to notify components when content has been reloaded
     contentReloadObservable = this.contentReloadSubject.asObservable();
-
-    // constructor(private cookieService: CookieService) {
-
-
-    // }
 
     private getApiClient(): ApiClient {
         if (!this.agilityClient) {
@@ -99,7 +91,7 @@ export class AgilityService {
     }
 
     enterPreviewMode(token?: string): void {
-        this.agilityClient = null; // Clear the client to reinitialize with preview mode
+        this.agilityClient = null;
         this.contentReloadSubject.next();
     
         if (isPlatformBrowser(this.platformId)) {
@@ -112,7 +104,7 @@ export class AgilityService {
 
     exitPreviewMode(): void {
         
-        this.agilityClient = null; // Clear the client so it reinitializes without preview mode
+        this.agilityClient = null;
         this.contentReloadSubject.next();
         if(isPlatformBrowser(this.platformId) && this.cookieService){
             this.cookieService.delete(this.previewCookieName, '/');
