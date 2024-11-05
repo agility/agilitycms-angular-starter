@@ -63,7 +63,7 @@ export class PageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     if (isPlatformBrowser(this.platformId)) {
-      this.loadComponents();
+      // this.loadComponents();
     }
   }
 
