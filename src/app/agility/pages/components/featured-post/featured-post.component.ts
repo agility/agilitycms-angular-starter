@@ -1,13 +1,14 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, TransferState, makeStateKey } from '@angular/core';
 import { AgilityService } from '../../../agility.service';
 import { RouterLink } from '@angular/router';
 import { NgIf } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
 
-
 function decodeHTML(str: string): string {
   return str.replace(/&#(\d+);/g, (_, dec) => String.fromCharCode(dec));
 }
+
+const CATEGORIES_KEY = makeStateKey<any>('categories');
 
 @Component({
   selector: 'app-module-featuredpost',
@@ -23,12 +24,16 @@ export class ModuleFeaturedPost implements OnInit {
   public category: any = null;
   public excerpt: any = null;
 
-  constructor(private agilityService: AgilityService) { }
+  constructor(private agilityService: AgilityService, private state: TransferState) { }
 
   async ngOnInit(): Promise<void> {
     try {
+      let categoriesRes = this.state.get(CATEGORIES_KEY, null as any);
 
-      const categoriesRes = await firstValueFrom(this.agilityService.getContentList('categories'));
+      if (!categoriesRes) {
+        categoriesRes = await firstValueFrom(this.agilityService.getContentList('categories'));
+        this.state.set(CATEGORIES_KEY, categoriesRes);
+      }
 
       this.item = this.data.item.fields;
 

@@ -5,10 +5,10 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "build:production": "npm run prerender:routes && ng build --configuration production",
+    "build:prod": "npm run prerender:routes && ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:fresh-ssr": "node dist/fresh-ssr/server/server.mjs",
+    "start:prod": "node dist/fresh-ssr/server/server.mjs",
     "prerender:routes": "ts-node --transpile-only prerender-routes.ts"
   },
   "private": true,

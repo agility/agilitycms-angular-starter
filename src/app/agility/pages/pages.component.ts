@@ -10,46 +10,6 @@ import { AgilityComponentDirective } from './components/components.directive';
 import { AgilityComponentService } from './components/components.service';
 import { AgilityComponent } from "./components/components.component";
 
-interface Zone {
-  [key: string]: Array<{
-    module: string;
-    item: {
-      contentID: number;
-      properties: {
-        state: number;
-        modified: string;
-        versionID: number;
-        referenceName: string;
-        definitionName: string;
-        itemOrder: number;
-      };
-      fields: {
-        title: string;
-        tagline: string;
-        image: {
-          label: string;
-          url: string;
-          target: string | null;
-          filesize: number;
-          pixelHeight: string;
-          pixelWidth: string;
-          height: number;
-          width: number;
-        };
-        imagePosition: string;
-        primaryButton: {
-          href: string;
-          target: string;
-          text: string;
-        };
-        content: string;
-        highPriority: string;
-      };
-    };
-  }>;
-}
-
-
 const PAGE_KEY = makeStateKey<any>('page');
 
 @Component({
@@ -63,7 +23,7 @@ const PAGE_KEY = makeStateKey<any>('page');
 export class PageComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(AgilityComponentDirective, { static: true }) agilityComponentHost!: AgilityComponentDirective;
 
-  public page: { zones: Zone } | null = null;
+  public page: { zones: any[] } | null = null;
   public pageStatus: number = 0;
   public title = 'AgilityCMS Angular SSR Starter';
   public isServer: boolean = false;
@@ -116,24 +76,38 @@ export class PageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   async makeApiRequest() {
     let currentPath = this.location.path().split('?')[0] || '/home';
-    if(currentPath === '') currentPath = '/home'
+    if(currentPath === '' || currentPath==='/favicon.png') currentPath = '/home'
+
+    let pageKey = makeStateKey<any>('page'+currentPath);
+    let sitemapKey = makeStateKey<any>('sitemap'+currentPath);
+    let dynamicPageItemKey = makeStateKey<any>('dynamicPageItem'+currentPath);
 
     try {
-      const sitemap = await firstValueFrom(this.agilityService.getSitemapFlat());
-      const pageInSitemap = sitemap[currentPath];
-      const pageData = await firstValueFrom(this.agilityService.getPage(pageInSitemap.pageID))
 
+
+      let sitemap = this.transferState.get(sitemapKey, null);
+      if(!sitemap) {
+       sitemap = await firstValueFrom(this.agilityService.getSitemapFlat());
+       this.transferState.set(sitemapKey, sitemap);
+      }
+
+      const pageInSitemap = sitemap[currentPath];
+      if (!pageInSitemap) {
+        this.pageStatus = 404;
+        return;
+      }
+       
+      this.page = await firstValueFrom(this.agilityService.getPage(pageInSitemap.pageID))
+     
       if (pageInSitemap.contentID) {
         this.dynamicPageItem = await firstValueFrom(this.agilityService.getContentItem(pageInSitemap.contentID));
+        this.transferState.set(dynamicPageItemKey, this.dynamicPageItem);
       }
 
-      this.page = pageData
+      // this.page = pageData
       this.titleService.setTitle(pageInSitemap.title);
       this.pageStatus = 200;
-
-      if (this.isServer) {
-        this.transferState.set(PAGE_KEY, this.page);
-      }
+      this.transferState.set(pageKey, this.page);
 
     } catch (error) {
       console.error('Error making API request', error);

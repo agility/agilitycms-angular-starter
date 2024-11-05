@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TransferState, makeStateKey } from '@angular/core';
 import { isDevMode } from '@angular/core';
 import { AgilityService } from '../../agility/agility.service';
 import { RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { NgIf, NgFor } from '@angular/common';
 
+const SITEMAP_KEY = makeStateKey<any>('sitemap');
+const HEADER_KEY = makeStateKey<any>('header');
 
 @Component({
   selector: 'site-header',
@@ -19,7 +21,10 @@ export class SiteHeaderComponent implements OnInit {
   public isPreview: boolean;
   public showMobileMenu: boolean = false;
 
-  constructor(private agilityService: AgilityService) {
+  constructor(
+    private agilityService: AgilityService,
+    private transferState: TransferState
+  ) {
     this.isPreview = isDevMode();
   }
 
@@ -33,11 +38,20 @@ export class SiteHeaderComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     try {
+      let sitemap = this.transferState.get(SITEMAP_KEY, null);
+      let obj = this.transferState.get(HEADER_KEY, null);
 
-      const sitemap = await firstValueFrom(this.agilityService.getSitemapNested());
-      const obj = await firstValueFrom(this.agilityService.getHeader());
+      if (!sitemap) {
+        sitemap = await firstValueFrom(this.agilityService.getSitemapNested());
+        this.transferState.set(SITEMAP_KEY, sitemap);
+      }
 
-      if(obj && obj.fields) {
+      if (!obj) {
+        obj = await firstValueFrom(this.agilityService.getHeader());
+        this.transferState.set(HEADER_KEY, obj);
+      }
+
+      if (obj && obj.fields) {
         this.siteHeader = obj.fields;
       }
 
@@ -49,7 +63,7 @@ export class SiteHeaderComponent implements OnInit {
             title: s.title,
           };
         });
-    
+
     } catch (error) {
       console.error('An error occurred while fetching data:', error);
     }
