@@ -1,62 +1,27 @@
-# Agility CMS & Angular Starter
+# FreshSsr
 
-New to Agility CMS? [Sign up for a FREE account](https://agilitycms.com/free)
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.10.
 
-[Introduction to Angular and Agility CMS](https://help.agilitycms.com/hc/en-us/articles/360056766852)
+## Development server
 
-## About This Starter
-- Angular is a popular platform and framework maintained by Google for building single-page client applications using HTML and TypeScript.
-- Supports full [Page Management](https://help.agilitycms.com/hc/en-us/articles/360055805831).
-- Supports Preview Mode.
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-### Tailwind CSS
+## Code scaffolding
 
-This starter uses [Tailwind CSS](https://tailwindcss.com/), a simple and lightweight utility-first CSS framework packed with classes that can be composed to build any design, directly in your markup.
+Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-It also comes equipped with [Autoprefixer](https://www.npmjs.com/package/autoprefixer), a plugin which use the data based on current browser popularity and property support to apply CSS prefixes for you.
+## Build
 
-## Getting Started
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
-To start using the Agility CMS & Angular Starter, [sign up](https://agilitycms.com/free) for a FREE account and create a new Instance using the Blog Template.
+## Running unit tests
 
-### Setting up the Starter
+Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-1. cd into the `src/environments` directory.
-2. Overwrite the values in the `environment.ts` file using your Preview API Key.
-4. Overwrite the values in the `environment.prod.ts` file using your Fetch API Key.
+## Running end-to-end tests
 
-You can get these values from the API Keys page in [Agility Settings](https://manager.agilitycms.com/settings/apikeys).
+Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
 
-## Running the Site Locally
-- `npm run start` => Starts your development environment.
-- `npm run build` => Builds your production enviornment.
+## Further help
 
-## How It Works
-- [How Pages Work](https://help.agilitycms.com/hc/en-us/articles/4403477298701)
-- [How Page Modules Work](https://help.agilitycms.com/hc/en-us/articles/4403477635853)
-- [How To Fetch Additional Data in Page Modules](https://help.agilitycms.com/hc/en-us/articles/4403478652301)
-
-## Resources
-
-### Agility CMS
-- [Official site](https://agilitycms.com)
-- [Documentation](https://help.agilitycms.com/hc/en-us)
-
-### Angular
-- [Official site](https://angular.io/)
-- [Documentation](https://angular.io/docs)
-
-### Tailwind CSS
-- [Official site](http://tailwindcss.com/)
-- [Documentation](http://tailwindcss.com/docs)
-
-### Community
-- [Official Slack](https://join.slack.com/t/agilitycommunity/shared_invite/enQtNzI2NDc3MzU4Njc2LWI2OTNjZTI3ZGY1NWRiNTYzNmEyNmI0MGZlZTRkYzI3NmRjNzkxYmI5YTZjNTg2ZTk4NGUzNjg5NzY3OWViZGI)
-- [Blog](https://agilitycms.com/resources/posts)
-- [GitHub](https://github.com/agility)
-- [Forums](https://help.agilitycms.com/hc/en-us/community/topics)
-- [Facebook](https://www.facebook.com/AgilityCMS/)
-- [Twitter](https://twitter.com/AgilityCMS)
-
-## Feedback and Questions
-If you have feedback or questions about this starter, please use the [Github Issues](https://github.com/agility/agilitycms-angular-starter/issues) on this repo, join our [Community Slack Channel](https://join.slack.com/t/agilitycommunity/shared_invite/enQtNzI2NDc3MzU4Njc2LWI2OTNjZTI3ZGY1NWRiNTYzNmEyNmI0MGZlZTRkYzI3NmRjNzkxYmI5YTZjNTg2ZTk4NGUzNjg5NzY3OWViZGI) or create a post on the [Agility Developer Community](https://help.agilitycms.com/hc/en-us/community/topics).
+To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

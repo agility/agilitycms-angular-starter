@@ -1,0 +1,6 @@
+/home
+/blog
+/blog/travel-photography-101
+/blog/am-eh-zing-places-to-visit-in-canada
+/blog/virtual-tours-ways-to-travel-from-home
+/about
