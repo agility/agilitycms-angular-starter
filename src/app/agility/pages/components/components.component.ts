@@ -1,6 +1,4 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-
-// import { IAgilityModuleComponent } from "./agility-component.icomponent"
 import { AgilityComponentDirective } from "./components.directive"
 import { AgilityComponentService } from './components.service';
 
@@ -10,9 +8,7 @@ import { AgilityComponentService } from './components.service';
 	standalone: true,
 	imports: [AgilityComponentDirective],
 	providers: [AgilityComponentService],
-	template: `
-	<ng-template agilityComponent></ng-template>
-  `,
+	templateUrl:`./components.component.html`,
 })
 
 

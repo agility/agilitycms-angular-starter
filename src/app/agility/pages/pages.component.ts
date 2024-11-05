@@ -9,9 +9,8 @@ import { NavigationEnd } from '@angular/router';
 import { AgilityComponentDirective } from './components/components.directive';
 import { AgilityComponentService } from './components/components.service';
 import { AgilityComponent } from "./components/components.component";
-import { start } from 'repl';
+import { isDevMode } from '@angular/core';
 
-const PAGE_KEY = makeStateKey<any>('page');
 
 @Component({
   selector: 'agility-page',
@@ -32,6 +31,7 @@ export class PageComponent implements OnInit, AfterViewInit, OnDestroy {
   private platformId: Object;
   private contentReloadSubscription: Subscription | null = null;
   private routerSubscription: Subscription | null = null;
+  public isDevMode: boolean = false;
 
   constructor(
     @Inject(PLATFORM_ID) platformId: Object,
@@ -44,8 +44,8 @@ export class PageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ) {
     this.isServer = isPlatformServer(platformId);
+    this.isDevMode = isDevMode();
     this.platformId = platformId;
-
   }
 
   ngOnInit() {

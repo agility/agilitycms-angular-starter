@@ -1,14 +1,13 @@
 {
-  "name": "fresh-ssr",
+  "name": "agilitycms",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "build:prod": "npm run prerender:routes && ng build --configuration production",
-    "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "start:prod": "node dist/fresh-ssr/server/server.mjs",
+    "dev": "ng serve",
+    "watch": "ng build --watch --configuration development",
+    "build": "npm run prerender:routes && ng build --configuration production",
+    "start": "node dist/agilitycms/server/server.mjs",
     "prerender:routes": "ts-node --transpile-only prerender-routes.ts"
   },
   "private": true,

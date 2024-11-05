@@ -19,6 +19,7 @@ export class SiteHeaderComponent implements OnInit {
   public siteHeader: any = null; // Initialize to null
   public links: any[] = [];
   public isPreview: boolean;
+  public isDevMode: boolean = false;
   public showMobileMenu: boolean = false;
 
   constructor(
@@ -26,6 +27,7 @@ export class SiteHeaderComponent implements OnInit {
     private transferState: TransferState
   ) {
     this.isPreview = isDevMode();
+    this.isDevMode = isDevMode();
   }
 
   toggle() {
