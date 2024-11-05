@@ -8,16 +8,13 @@ Run `npm install` to install the required packages.
 
 Run `npm run dev` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-You will see client side requests.
+You will see client side requests. Routing is done via the <a [routerLink]> tags and takes place client side.
 
 ## Production server
 Run `npm run build` this will prerender your sitemap pages and create a static build of your site. The build artifacts will be stored in the `dist/` directory.
-Run `npm run start` this will start a standalone Express server and serve the static build. 
+Run `npm run start` this will start the built production server. 
 
-No client side requests are made in production.
-
-## Angular 18
-Documentation
+No client side requests are made in production. Routing is done via the browser and <a [href]> tags
 
 ## Running unit tests
 
