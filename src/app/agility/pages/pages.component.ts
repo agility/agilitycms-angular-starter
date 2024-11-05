@@ -115,14 +115,14 @@ export class PageComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   async makeApiRequest() {
-    const currentPath = this.location.path().split('?')[0] || '/home';
+    let currentPath = this.location.path().split('?')[0] || '/home';
+    if(currentPath === '') currentPath = '/home'
+
     try {
       const sitemap = await firstValueFrom(this.agilityService.getSitemapFlat());
       const pageInSitemap = sitemap[currentPath];
       const pageData = await firstValueFrom(this.agilityService.getPage(pageInSitemap.pageID))
 
-
-      // // right now we're not getting contentID back from the sitemap fyi
       if (pageInSitemap.contentID) {
         this.dynamicPageItem = await firstValueFrom(this.agilityService.getContentItem(pageInSitemap.contentID));
       }
