@@ -9,6 +9,7 @@ import { NavigationEnd } from '@angular/router';
 import { AgilityComponentDirective } from './components/components.directive';
 import { AgilityComponentService } from './components/components.service';
 import { AgilityComponent } from "./components/components.component";
+import { start } from 'repl';
 
 const PAGE_KEY = makeStateKey<any>('page');
 
@@ -30,6 +31,7 @@ export class PageComponent implements OnInit, AfterViewInit, OnDestroy {
   public dynamicPageItem: any = null;
   private platformId: Object;
   private contentReloadSubscription: Subscription | null = null;
+  private routerSubscription: Subscription | null = null;
 
   constructor(
     @Inject(PLATFORM_ID) platformId: Object,
@@ -47,10 +49,21 @@ export class PageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.makeApiRequest()
-    this.router.events.subscribe((event) => {
+
+    // this.makeApiRequest()
+    if(this.isServer){
+      this.makeApiRequest();
+    }
+
+    this.routerSubscription = this.router.events.subscribe((event) => {
+
+     
       if (event instanceof NavigationEnd) {
+        // console.log('NavigationEnd, ', this.transferState.get(PAGE_KEY, null));
         this.makeApiRequest();
+        // console.log('NavigationEnd, ', this.transferState);
+
+
       }
     });
 
@@ -63,7 +76,7 @@ export class PageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     if (isPlatformBrowser(this.platformId)) {
-      // this.loadComponents();
+      this.loadComponents();
     }
   }
 
@@ -71,46 +84,56 @@ export class PageComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.contentReloadSubscription) {
       this.contentReloadSubscription.unsubscribe();
     }
+    if(this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
   }
 
 
-  async makeApiRequest() {
+    async makeApiRequest() {
     let currentPath = this.location.path().split('?')[0] || '/home';
-    if(currentPath === '' || currentPath==='/favicon.png') currentPath = '/home'
-
-    let pageKey = makeStateKey<any>('page'+currentPath);
-    let sitemapKey = makeStateKey<any>('sitemap'+currentPath);
-    let dynamicPageItemKey = makeStateKey<any>('dynamicPageItem'+currentPath);
-
+    if (currentPath === '' || currentPath === '/favicon.png') currentPath = '/home';
+  
+    let pageKey = makeStateKey<any>('page' + currentPath.replaceAll('/', '-'));
+    let sitemapKey = makeStateKey<any>('page-sitemap');
+    let dynamicPageItemKey = makeStateKey<any>('dynamicPageItem' + currentPath.replaceAll('/', '-'));
+  
     try {
-
-
       let sitemap = this.transferState.get(sitemapKey, null);
-      if(!sitemap) {
-       sitemap = await firstValueFrom(this.agilityService.getSitemapFlat());
-       this.transferState.set(sitemapKey, sitemap);
+      if (!sitemap) {
+        sitemap = await firstValueFrom(this.agilityService.getSitemapFlat());
       }
-
       const pageInSitemap = sitemap[currentPath];
       if (!pageInSitemap) {
         this.pageStatus = 404;
         return;
       }
-       
-      this.page = await firstValueFrom(this.agilityService.getPage(pageInSitemap.pageID))
-     
+  
       if (pageInSitemap.contentID) {
-        this.dynamicPageItem = await firstValueFrom(this.agilityService.getContentItem(pageInSitemap.contentID));
-        this.transferState.set(dynamicPageItemKey, this.dynamicPageItem);
+        this.dynamicPageItem = this.transferState.get(dynamicPageItemKey, null);
+        if (!this.dynamicPageItem) {
+          this.dynamicPageItem = await firstValueFrom(this.agilityService.getContentItem(pageInSitemap.contentID));
+        }
       }
-
-      // this.page = pageData
+  
       this.titleService.setTitle(pageInSitemap.title);
       this.pageStatus = 200;
-      this.transferState.set(pageKey, this.page);
+  
+      this.page = this.transferState.get(pageKey, null);
+      if (!this.page) {
+        this.page = await firstValueFrom(this.agilityService.getPage(pageInSitemap.pageID));
+      }
+  
 
+      if(this.isServer){
+      this.transferState.set(sitemapKey, sitemap);
+      this.transferState.set(dynamicPageItemKey, this.dynamicPageItem);
+      this.transferState.set(pageKey, this.page);
+      }
+  
     } catch (error) {
       console.error('Error making API request', error);
+      this.pageStatus = 500;
     }
   }
 
