@@ -6,11 +6,8 @@
     "test": "ng test",
     "dev": "ng serve",
     "watch": "ng build --watch --configuration development",
-    "build": "npm run prerender:routes && ng build",
-    "start": "ng serve",
-    "build:prod": "npm run prerender:routes && ng build --configuration production",
-    "start:prod": "ng serve --configuration production",
-    "start:static": "node dist/agilitycms/server/server.mjs",
+    "build": "npm run prerender:routes && ng build --configuration production",
+    "start": "ng serve --configuration production",
     "prerender:routes": "ts-node --transpile-only prerender-routes.ts"
   },
   "private": true,

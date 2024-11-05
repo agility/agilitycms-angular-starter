@@ -12,7 +12,15 @@
     "
   >
     <div class="md:w-6/12 flex-shrink-0 relative">
-      <a [routerLink]="item.primaryButton.href">
+      <a *ngIf="isDevMode" [routerLink]="item.primaryButton.href">
+        <img
+          [src]="item.image.url"
+          [alt]="item.image.label"
+          class="rounded-lg object-cover object-center cursor-pointer"
+          style="width: 768px; height: 420px"
+        />
+      </a>
+      <a *ngIf="!isDevMode" [href]="item.primaryButton.href">
         <img
           [src]="item.image.url"
           [alt]="item.image.label"
@@ -22,7 +30,7 @@
       </a>
     </div>
     <div
-      *ngIf="item.imagePosition === 'right'; else elseBlock"
+      *ngIf="item.imagePosition === 'right</ng-template>'; else elseBlock"
       class="md:w-6/12 mt-16 md:mt-0 md:mr-12 lg:mr-16 md:order-first"
     >
       <div class="g:py-8 text-center md:text-left">

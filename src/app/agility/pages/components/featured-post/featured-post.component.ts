@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, TransferState, makeStateKey } from '@angular/core';
+import { Component, OnInit, Input, TransferState, makeStateKey, isDevMode } from '@angular/core';
 import { AgilityService } from '../../../agility.service';
 import { RouterLink } from '@angular/router';
 import { NgIf } from '@angular/common';
@@ -23,8 +23,11 @@ export class ModuleFeaturedPost implements OnInit {
   public date: any = null;
   public category: any = null;
   public excerpt: any = null;
+  public isDevMode: boolean = false;
 
-  constructor(private agilityService: AgilityService, private state: TransferState) { }
+  constructor(private agilityService: AgilityService, private state: TransferState) {
+    this.isDevMode = isDevMode();
+   }
 
   async ngOnInit(): Promise<void> {
     try {
