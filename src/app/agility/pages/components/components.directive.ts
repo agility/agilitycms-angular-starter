@@ -4,6 +4,6 @@ import { Directive, ViewContainerRef } from '@angular/core';
   selector: '[agilityComponent]',
   standalone: true
 })
-export class AgilityComponentDirective {
+export class AgilityComponentsDirective {
   constructor(public viewContainerRef: ViewContainerRef) { }
 }

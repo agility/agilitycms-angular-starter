@@ -11,7 +11,7 @@ import { ModuleHeading } from './heading/heading.component';
   providedIn: 'root',
 })
 
-export class AgilityComponentService {
+export class AgilityComponentsService {
 
   private componentMap: { [key: string]: Type<any> } = {
     'richtextarea': ModuleRichTextAreaComponent,

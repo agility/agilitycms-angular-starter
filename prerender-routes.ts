@@ -9,8 +9,6 @@ const agilityClient = agilityFetch.getApi({
     isPreview: false, // Set to true if you want to fetch preview content
 });
 
-console.log('AgilityClient ->', agilityClient);
-
 async function fetchRoutes() {
     try {
         // Fetch the flat sitemap

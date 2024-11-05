@@ -1,27 +1,27 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { AgilityComponentDirective } from "./components.directive"
-import { AgilityComponentService } from './components.service';
+import { AgilityComponentsDirective } from "./components.directive"
+import { AgilityComponentsService } from './components.service';
 
 
 @Component({
 	selector: 'agility-component',
 	standalone: true,
-	imports: [AgilityComponentDirective],
-	providers: [AgilityComponentService],
+	imports: [AgilityComponentsDirective],
+	providers: [AgilityComponentsService],
 	templateUrl:`./components.component.html`,
 })
 
 
-export class AgilityComponent implements OnInit {
+export class AgilityComponents implements OnInit {
 	@Input() moduleObj: any;
 	@Input() page: any;
 	@Input() dynamicPageItem: any;
-	@ViewChild(AgilityComponentDirective, { static: true }) agilityComponentHost!: AgilityComponentDirective;
+	@ViewChild(AgilityComponentsDirective, { static: true }) agilityComponentHost!: AgilityComponentsDirective;
 
 	public loaded: boolean
 
 	constructor(
-		private agilityComponentService: AgilityComponentService
+		private agilityComponentsService: AgilityComponentsService
 	) {
 		this.loaded = false
 	}
@@ -36,7 +36,7 @@ export class AgilityComponent implements OnInit {
 		let moduleName = this.moduleObj?.value.module;
 
 
-		let moduleType = this.agilityComponentService.getComponent(moduleName) as any;
+		let moduleType = this.agilityComponentsService.getComponent(moduleName) as any;
 		if (!moduleType) {
 			console.warn(`No module found for ${moduleName}`);
 			return;
