@@ -1,6 +1,7 @@
 require('dotenv').config();
 const fs = require('fs');
 const agilityFetch = require('@agility/content-fetch');
+const path = require('path');
 // const { environment } = require('./src/environments/environment.ts');
 
 // Initialize the Agility API client
@@ -23,8 +24,17 @@ async function fetchRoutes() {
         // Extract paths from the sitemap keys
         const routes = Object.keys(data);
 
+
+       
         // Define the path for the output .txt file
         const outputPath = 'src/app/agility/routing/agility-routes.txt';
+
+        // Ensure the directory exists
+        const directoryPath = path.dirname(outputPath);
+        if (!fs.existsSync(directoryPath)) {
+            fs.mkdirSync(directoryPath, { recursive: true });
+        }
+
 
         // Write the routes to the .txt file
         fs.writeFileSync(outputPath, routes.join('\n'), 'utf-8');
