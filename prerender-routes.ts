@@ -1,6 +1,6 @@
 const fs = require('fs');
 const agilityFetch = require('@agility/content-fetch');
-const { environment } = require('./src/environments/environment.ts');
+const { environment } = require('./src/environments/environment');
 
 // Initialize the Agility API client
 const agilityClient = agilityFetch.getApi({
