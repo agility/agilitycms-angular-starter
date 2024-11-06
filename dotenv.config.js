@@ -1,5 +1,6 @@
 require('dotenv').config();
 const fs = require('fs');
+const path = require('path');
 
 const development = `
 export const environment = {
@@ -22,7 +23,12 @@ export const environment = {
 };
 `;
 
-fs.writeFileSync('./src/environments/environment.ts', development);
-fs.writeFileSync('./src/environments/environment.prod.ts', production);
+const dir = './src/environments';
+if (!fs.existsSync(dir)) {
+  fs.mkdirSync(dir);
+}
+
+fs.writeFileSync(path.join(dir, 'environment.ts'), development);
+fs.writeFileSync(path.join(dir, 'environment.prod.ts'), production);
 
 console.log('Environment variables written to environment.ts and environment.prod.ts');
