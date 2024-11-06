@@ -13,7 +13,7 @@ export const environment = {
 `;
 const production = `
 export const environment = {
-  production: false,
+  production: true,
   AGILITY_GUID: '${process.env.AGILITY_GUID}',
   AGILITY_API_FETCH_KEY: '${process.env.AGILITY_API_FETCH_KEY}',
   AGILITY_API_PREVIEW_KEY: '${process.env.AGILITY_API_PREVIEW_KEY}',
