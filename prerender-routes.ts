@@ -1,11 +1,12 @@
+require('dotenv').config();
 const fs = require('fs');
 const agilityFetch = require('@agility/content-fetch');
-const { environment } = require('./src/environments/environment.ts');
+// const { environment } = require('./src/environments/environment.ts');
 
 // Initialize the Agility API client
 const agilityClient = agilityFetch.getApi({
-    guid: environment.AGILITY_GUID,
-    apiKey: environment.AGILITY_API_FETCH_KEY,
+    guid: process.env['AGILITY_GUID'],
+    apiKey: process.env['AGILITY_API_FETCH_KEY'],
     isPreview: false, // Set to true if you want to fetch preview content
 });
 
@@ -13,8 +14,8 @@ async function fetchRoutes() {
     try {
         // Fetch the flat sitemap
         const data = await agilityClient.getSitemapFlat({
-            languageCode: environment.AGILITY_LOCALE,
-            channelName: environment.AGILITY_SITEMAP,
+            languageCode: process.env['AGILITY_LOCALE'],
+            channelName: process.env['AGILITY_SITEMAP'],
         });
 
         console.log("Fetched routes:", data);
