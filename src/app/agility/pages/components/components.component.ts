@@ -2,7 +2,6 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { AgilityComponentsDirective } from "./components.directive"
 import { AgilityComponentsService } from './components.service';
 
-
 @Component({
 	selector: 'agility-component',
 	standalone: true,
@@ -33,9 +32,9 @@ export class AgilityComponents implements OnInit {
 	loadComponent() {
 
 		//get the module name
-		let moduleName = this.moduleObj?.value.module;
+		let moduleName = this.moduleObj?.module;
 
-
+	
 		let moduleType = this.agilityComponentsService.getComponent(moduleName) as any;
 		if (!moduleType) {
 			console.warn(`No module found for ${moduleName}`);
@@ -53,14 +52,14 @@ export class AgilityComponents implements OnInit {
 
 		// Ensure the item property is set
 		if (componentRef.instance?.hasOwnProperty('item')) {
-			(componentRef.instance as any).item = this.moduleObj?.value.item;
+			(componentRef.instance as any).item = this.moduleObj?.item;
 		}
 
 		// Ensure the data property is set
 		if (componentRef.instance?.hasOwnProperty('data')) {
 			(componentRef.instance as any).data = {
-				item: this.moduleObj?.value.item,
-				image: this.moduleObj?.value.image,
+				item: this.moduleObj?.item,
+				image: this.moduleObj?.item.image,
 				page: this.page,
 				dynamicPageItem: this.dynamicPageItem
 			};

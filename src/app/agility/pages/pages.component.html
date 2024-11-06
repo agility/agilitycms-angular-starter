@@ -2,9 +2,9 @@
 <ng-container *ngIf="pageStatus === 404">Page not found.</ng-container>
 <ng-container *ngIf="pageStatus === 500">Error loading page.</ng-container>
 <ng-container *ngIf="pageStatus === 200">
-    <ng-container *ngIf="page?.zones"></ng-container>
+    <ng-container *ngIf="page?.zones">
         <ng-container *ngFor="let zone of (page?.zones | keyvalue)">
-            <ng-container *ngFor="let moduleRef of (zone.value | keyvalue)">
+            <ng-container *ngFor="let moduleRef of zone.value">
                 <agility-component [moduleObj]="moduleRef" [page]="page" [dynamicPageItem]="dynamicPageItem">
                 </agility-component>
             </ng-container>
