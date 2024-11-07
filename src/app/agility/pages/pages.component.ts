@@ -103,14 +103,14 @@ export class PageComponent implements OnInit, OnDestroy {
         }
       }
 
-      this.titleService.setTitle(pageInSitemap.title);
-      this.pageStatus = 200;
-
       this.page = this.transferState.get(pageKey, null);
       this.transferState.remove(pageKey);
       if (!this.page) {
         this.page = await firstValueFrom(this.agilityService.getPage(pageInSitemap.pageID));
       }
+
+      this.titleService.setTitle(pageInSitemap.title);
+      this.pageStatus = 200;
 
 
       if (this.isServer) {

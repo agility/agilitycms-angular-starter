@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, isDevMode } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { NgIf } from '@angular/common';
+import { AgilityService } from '../../../agility.service';
 
 @Component({
   selector: 'app-module-textblockwithimage',
@@ -15,8 +16,18 @@ export class ModuleTextBlockWithImage implements OnInit {
   public item: any = null;
   public isDevMode: boolean = false;
 
-  constructor() {
+
+  constructor(private router: Router, private agilityService: AgilityService) {
     this.isDevMode = isDevMode();
+  }
+
+  public navigate(e: Event, url: string) {
+    e.preventDefault();
+    if(this.isDevMode || this.agilityService.isPreviewMode) {
+    this.router.navigate([url]);
+    } else {
+      window.location.href = url;
+    }
   }
 
   ngOnInit(): void {

@@ -1,9 +1,9 @@
 import { Component, OnInit, TransferState, makeStateKey } from '@angular/core';
 import { isDevMode } from '@angular/core';
 import { AgilityService } from '../../agility/agility.service';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
-import { NgIf, NgFor } from '@angular/common';
+import { NgIf, NgFor, isPlatformBrowser } from '@angular/common';
 
 const SITEMAP_KEY = makeStateKey<any>('sitemap');
 const HEADER_KEY = makeStateKey<any>('header');
@@ -18,15 +18,16 @@ const HEADER_KEY = makeStateKey<any>('header');
 export class SiteHeaderComponent implements OnInit {
   public siteHeader: any = null; // Initialize to null
   public links: any[] = [];
-  public isPreview: boolean;
+  public isPreviewMode: boolean;
   public isDevMode: boolean = false;
   public showMobileMenu: boolean = false;
 
   constructor(
     private agilityService: AgilityService,
-    private transferState: TransferState
+    private transferState: TransferState,
+    private router: Router
   ) {
-    this.isPreview = this.agilityService.isPreviewMode;
+    this.isPreviewMode = this.agilityService.isPreviewMode;
     this.isDevMode = isDevMode();
   }
 
@@ -38,9 +39,16 @@ export class SiteHeaderComponent implements OnInit {
     this.showMobileMenu = false;
   }
 
+  public navigate(e: Event, url: string) {
+    e.preventDefault();
+    if(this.isDevMode || this.agilityService.isPreviewMode) {
+    this.router.navigate([url]);
+    } else {
+      window.location.href = url;
+    }
+  }
+
   async ngOnInit(): Promise<void> {
-    console.log('isPreviewMode', this.isPreview)
-    console.log('agilityService', this.agilityService.isPreviewMode)
     try {
       let sitemap = this.transferState.get(SITEMAP_KEY, null);
       let obj = this.transferState.get(HEADER_KEY, null);

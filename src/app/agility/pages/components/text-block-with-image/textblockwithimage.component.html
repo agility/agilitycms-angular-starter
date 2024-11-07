@@ -12,15 +12,9 @@
     "
   >
     <div class="md:w-6/12 flex-shrink-0 relative">
-      <a *ngIf="isDevMode" [routerLink]="item.primaryButton.href">
-        <img
-          [src]="item.image.url"
-          [alt]="item.image.label"
-          class="rounded-lg object-cover object-center cursor-pointer"
-          style="width: 768px; height: 420px"
-        />
-      </a>
-      <a *ngIf="!isDevMode" [href]="item.primaryButton.href">
+      <a  
+      (click)="navigate($event, item.primaryButton.href)" class="cursor-pointer"
+      >
         <img
           [src]="item.image.url"
           [alt]="item.image.label"
@@ -79,7 +73,7 @@
         </p>
         <a
           *ngIf="item.primaryButton"
-          [routerLink]="item.primaryButton.href"
+          (click)="navigate($event, item.primaryButton.href)"
           [target]="item.primaryButton.target"
           class="
             inline-block

@@ -12,17 +12,18 @@ import { isPlatformBrowser } from '@angular/common';
 export class AgilityService {
     private serverUrl = 'https://api.aglty.io';
     
-    private guid = environment.AGILITY_GUID;
-    public apitype: 'preview' | 'fetch' = 'fetch'; // Ensure this starts in fetch mode
-    public isPreviewMode = false;
-    
+    private guid: string = environment.AGILITY_GUID;
+    private apitype: 'preview' | 'fetch' = 'fetch'; // Ensure this starts in fetch mode
     private locale = environment.AGILITY_LOCALE;
     private channelName = environment.AGILITY_SITEMAP;
-    
-    public previewModeChange = new Subject<void>();
     private previewCookieName = 'agilitypreviewkey';
     private platformId: Object;
-    private token:string;
+
+    public previewModeChange = new Subject<void>();
+
+    public isPreviewMode = false;
+    
+
 
     constructor(
         private cookieService: CookieService,
@@ -31,7 +32,6 @@ export class AgilityService {
     ) {
         this.platformId = platformId;
         this.apitype = this.isPreviewMode ? 'preview' : 'fetch';
-        this.token = this.isPreviewMode ? environment.AGILITY_API_PREVIEW_KEY : environment.AGILITY_API_FETCH_KEY;
     }
 
    
@@ -104,34 +104,20 @@ export class AgilityService {
         );
     }
 
+    
     enterPreviewMode(token?: string): void {
-
-        console.log('enterPreviewMode', token);
-        this.cookieService.set(this.previewCookieName, token || 'true', { path: '/', expires: 1 });
+        this.cookieService.set(this.previewCookieName, token || 'true');
         this.apitype = 'preview';
         this.isPreviewMode = true;
-        this.token = environment.AGILITY_API_PREVIEW_KEY;
         this.previewModeChange.next();
     }
 
     exitPreviewMode(): void {
-        if (isPlatformBrowser(this.platformId) && this.cookieService) {
-            this.cookieService.delete(this.previewCookieName, '/');
-        }
+        this.cookieService.delete(this.previewCookieName);
         this.apitype = 'fetch'
         this.isPreviewMode = false;
-        this.token = environment.AGILITY_API_FETCH_KEY;
         this.previewModeChange.next();
     }
-
-    getPreviewModeCookie(): string | null {
-        if (isPlatformBrowser(this.platformId) && this.cookieService) {
-            return this.cookieService.get(this.previewCookieName) || null;
-        }
-        return null;
-    }
-    
-    
 
 
 }

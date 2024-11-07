@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, TransferState, makeStateKey, isDevMode } from '@angular/core';
 import { AgilityService } from '../../../agility.service';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { NgIf } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
 
@@ -25,9 +25,18 @@ export class ModuleFeaturedPost implements OnInit {
   public excerpt: any = null;
   public isDevMode: boolean = false;
 
-  constructor(private agilityService: AgilityService, private state: TransferState) {
+  constructor(private agilityService: AgilityService, private state: TransferState, private router: Router) {
     this.isDevMode = isDevMode();
    }
+
+  public navigate(e: Event, url: string) {
+    e.preventDefault();
+    if(this.isDevMode || this.agilityService.isPreviewMode) {
+    this.router.navigate([url]);
+    } else {
+      window.location.href = url;
+    }
+  }
 
   async ngOnInit(): Promise<void> {
     try {

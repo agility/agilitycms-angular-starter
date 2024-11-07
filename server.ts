@@ -4,6 +4,10 @@ import express from 'express';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve } from 'node:path';
 import bootstrap from './src/main.server';
+import dotenv from 'dotenv';
+import { HttpHeaders } from '@angular/common/http';
+import { catchError, throwError } from 'rxjs';
+dotenv.config();
 
 // The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
@@ -11,6 +15,14 @@ export function app(): express.Express {
   const serverDistFolder = dirname(fileURLToPath(import.meta.url));
   const browserDistFolder = resolve(serverDistFolder, '../browser');
   const indexHtml = join(serverDistFolder, 'index.server.html');
+  const isPreviewMode = false;
+
+  const guid = process.env['AGILITY_GUID'];
+  const locale = process.env['AGILITY_LOCALE'];
+  const channelName = process.env['AGILITY_SITEMAP'];
+
+  let apitype = 'fetch';
+  let token = process.env['AGILITY_API_FETCH_KEY'];
 
   const commonEngine = new CommonEngine();
 
