@@ -3,7 +3,7 @@ import { AgilityService } from '../../../agility.service';
 import { Router, RouterLink } from '@angular/router';
 import { NgIf } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
-import PrerenderedAgilityContentLists from '../../../data/content.json'
+import PrerenderedAgilityContentLists from '../../../data/content.json';
 
 function decodeHTML(str: string): string {
   return str.replace(/&#(\d+);/g, (_, dec) => String.fromCharCode(dec));
@@ -40,13 +40,7 @@ export class ModuleFeaturedPost implements OnInit, OnChanges {
   }
 
   async ngOnInit(): Promise<void> {
-
-    const categoriesData = PrerenderedAgilityContentLists['categories'];
-    if (categoriesData) {
-      this.state.set(CATEGORIES_KEY, categoriesData as any);
-    } else {
-      await this.initializeComponent();
-    }
+    await this.initializeComponent();
   }
 
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
