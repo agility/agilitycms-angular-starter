@@ -28,15 +28,12 @@
       </div>
     </div>
     <div class="py-4">
-
       <div class="flex gap-4 items-center">
-
         <p class="text-xs md:text-base">
           {{ isPreview ? 'Previewing' : 'Viewing' }} 
           <span class="font-bold">{{ isPreview ? 'Latest' : 'Published'}}</span> 
           {{ isPreview ? 'Changes' : 'Content' }}
         </p>
-
         <div><button (click)="togglePreviewMode()" class="bg-yellow-500 px-4 py-2 text-gray-800 hover:bg-yellow-600">
             {{ isPreview ? 'View Published' : 'Preview Mode' }}
           </button></div>

@@ -4,7 +4,7 @@ const path = require('path');
 
 const development = `
 export const environment = {
-  production: false,
+  AGILITY_PREVIEW: true,
   AGILITY_GUID: '${process.env.AGILITY_GUID}',
   AGILITY_API_FETCH_KEY: '${process.env.AGILITY_API_FETCH_KEY}',
   AGILITY_API_PREVIEW_KEY: '${process.env.AGILITY_API_PREVIEW_KEY}',
@@ -14,7 +14,7 @@ export const environment = {
 `;
 const production = `
 export const environment = {
-  production: true,
+  AGILITY_PREVIEW: false,
   AGILITY_GUID: '${process.env.AGILITY_GUID}',
   AGILITY_API_FETCH_KEY: '${process.env.AGILITY_API_FETCH_KEY}',
   AGILITY_API_PREVIEW_KEY: '${process.env.AGILITY_API_PREVIEW_KEY}',

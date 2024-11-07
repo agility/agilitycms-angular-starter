@@ -26,7 +26,7 @@ export class SiteHeaderComponent implements OnInit {
     private agilityService: AgilityService,
     private transferState: TransferState
   ) {
-    this.isPreview = isDevMode();
+    this.isPreview = this.agilityService.isPreviewMode;
     this.isDevMode = isDevMode();
   }
 
@@ -39,6 +39,8 @@ export class SiteHeaderComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
+    console.log('isPreviewMode', this.isPreview)
+    console.log('agilityService', this.agilityService.isPreviewMode)
     try {
       let sitemap = this.transferState.get(SITEMAP_KEY, null);
       let obj = this.transferState.get(HEADER_KEY, null);

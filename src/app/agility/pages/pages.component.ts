@@ -58,7 +58,7 @@ export class PageComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.previewModeSubscription = this.agilityService.previewModeSubject.subscribe(() => {
+    this.previewModeSubscription = this.agilityService.previewModeChange.subscribe(() => {
       if (isPlatformBrowser(this.platformId)) {
         this.makeApiRequest();
       }

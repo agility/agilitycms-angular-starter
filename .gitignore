@@ -10,6 +10,9 @@ prerender-routes.js
 /src/environments/environment.prod.ts
 /src/environments/environment.ts
 /src/environments
+content.json
+pages.json
+agility-routes.txt
 
 # dependencies
 /node_modules
