@@ -1,4 +1,5 @@
 import { isPlatformServer, isPlatformBrowser, JsonPipe, NgIf, NgFor, KeyValuePipe } from '@angular/common';
+import agilityPagesData from '../data/pages.json';
 import { Component, Inject, makeStateKey, OnInit, PLATFORM_ID, TransferState, ViewChild, OnDestroy } from '@angular/core';
 import { firstValueFrom, Subscription } from 'rxjs';
 import { AgilityService } from '../agility.service';
@@ -15,6 +16,40 @@ import { SiteHeaderComponent } from '../../components/site-header/site-header.co
 import { SiteFooterComponent } from '../../components/site-footer/site-footer.component';
 
 
+
+// Define the structure of a module item
+interface ModuleItem {
+  module: string;
+  item: {
+      contentID: number;
+      properties: {
+          state: number;
+          modified: string;
+          versionID: number;
+          referenceName: string;
+          definitionName: string;
+          itemOrder: number;
+      };
+      fields: {
+          textblob: string;
+      };
+      seo: any;
+  };
+}
+
+// Define the structure of zones
+interface Zones {
+  [key: string]: ModuleItem[];
+}
+
+// Define the structure of the page
+interface Page {
+  zones: Zones;
+  title?: string;
+  contentID?: number | null | undefined;
+  // Add other properties of the page if necessary
+}
+
 @Component({
   selector: 'agility-page',
   standalone: true,
@@ -25,7 +60,7 @@ import { SiteFooterComponent } from '../../components/site-footer/site-footer.co
 export class PageComponent implements OnInit, OnDestroy {
   @ViewChild(AgilityComponentsDirective, { static: true }) agilityComponentHost!: AgilityComponentsDirective;
 
-  public page: { zones: any[] } | null = null;
+  public page: Page | null = null;
   public pageStatus: number = 0;
   public title = 'AgilityCMS Angular SSR Starter';
   public isServer: boolean = false;
@@ -52,7 +87,7 @@ export class PageComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     if(isPlatformServer(this.platformId)) {
-        this.makeApiRequest();
+        this.loadPage();
     }
 
     if(isPlatformBrowser(this.platformId)) {
@@ -64,15 +99,17 @@ export class PageComponent implements OnInit, OnDestroy {
       this.pageStatus = 200;
     }
 
+    // this.loadPage();
+
     this.routerSubscription = this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        this.makeApiRequest();
+        this.loadPage();
       }
     });
 
     this.previewModeSubscription = this.agilityService.previewModeChange.subscribe(() => {
       if (isPlatformBrowser(this.platformId)) {
-        this.makeApiRequest();
+        this.loadPage();
       }
     });
   }
@@ -86,8 +123,18 @@ export class PageComponent implements OnInit, OnDestroy {
     }
   }
 
+  async preloadTransferStateData() {
+    let pagePath = this.location.path().split('?')[0] || '/home';
+    if (pagePath === '') pagePath = '/home';
+    for (const key in agilityPagesData) {
+      const pageKey = makeStateKey<any>(key);
+      this.transferState.set(pageKey, (agilityPagesData as any)[key]);
+    } 
+  }
 
-  async makeApiRequest() {
+
+  async loadPage() {
+
 
     let currentPath = this.location.path().split('?')[0] || '/home';
     if (currentPath === '' || currentPath === '/favicon.png') currentPath = '/home';

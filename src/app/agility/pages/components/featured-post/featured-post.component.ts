@@ -3,6 +3,7 @@ import { AgilityService } from '../../../agility.service';
 import { Router, RouterLink } from '@angular/router';
 import { NgIf } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
+import PrerenderedAgilityContentLists from '../../../data/content.json';
 
 function decodeHTML(str: string): string {
   return str.replace(/&#(\d+);/g, (_, dec) => String.fromCharCode(dec));

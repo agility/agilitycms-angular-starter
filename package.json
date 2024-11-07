@@ -6,9 +6,13 @@
     "test": "ng test",
     "envinit": "node dotenv.config.js",
     "dev": "npm run envinit && ng serve",
-    "build": "npm run envinit && npm run prerender:routes && ng build --configuration production",
+    "build": "npm run agility-init && ng build --configuration production",
     "start": "ng serve --configuration production",
-    "prerender:routes": "tsc prerender-routes.ts && node prerender-routes.js"
+
+    "agility-init": "npm run envinit && npm run prerender:routes && npm run prerender:pages && npm run prerender:content",
+    "prerender:routes": "tsc prerender-routes.ts && node prerender-routes.js",
+    "prerender:pages": "tsc prerender-pages.ts && node prerender-pages.js",
+    "prerender:content": "tsc prerender-content.ts && node prerender-content.js"
   },
   "private": true,
   "dependencies": {
