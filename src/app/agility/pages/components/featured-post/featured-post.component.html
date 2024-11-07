@@ -1,8 +1,6 @@
 <div class="relative px-8 mb-8" *ngIf="item && item.featuredPost">
   <div class="flex flex-col sm:flex-row max-w-screen-xl mx-auto pt-8 group">
     <div class="sm:w-1/2 lg:w-2/3 sm:rounded-t-none sm:rounded-l-lg relative">
-
-
       <a (click)="navigate($event, '/blog/' + item.featuredPost.fields?.slug)" class="cursor-pointer">
         <div class="h-64 sm:h-96 relative">
           <img [src]="item.featuredPost.fields?.image?.url"
@@ -10,7 +8,6 @@
             style="height: 100%; width: 100%" />
         </div>
       </a>
-
     </div>
     <div class="
         sm:w-1/2
@@ -39,7 +36,6 @@
           {{ excerpt }}
         </div>
       </a>
-
     </div>
   </div>
 </div>

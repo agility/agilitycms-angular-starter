@@ -10,12 +10,15 @@ import { AgilityComponentsDirective } from './components/components.directive';
 import { AgilityComponentsService } from './components/components.service';
 import { AgilityComponents } from "./components/components.component";
 import { isDevMode } from '@angular/core';
+import { PreviewBarComponent } from './components/preview-bar/preview-bar.component';
+import { SiteHeaderComponent } from '../../components/site-header/site-header.component';
+import { SiteFooterComponent } from '../../components/site-footer/site-footer.component';
 
 
 @Component({
   selector: 'agility-page',
   standalone: true,
-  imports: [JsonPipe, NgIf, NgFor, KeyValuePipe, AgilityComponentsDirective, AgilityComponents],
+  imports: [JsonPipe, NgIf, NgFor, KeyValuePipe,  AgilityComponents, PreviewBarComponent, SiteHeaderComponent, SiteFooterComponent],
   providers: [AgilityComponentsService],
   templateUrl: 'pages.component.html',
 })
@@ -48,8 +51,17 @@ export class PageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    if (this.isServer) {
-      this.makeApiRequest();
+    if(isPlatformServer(this.platformId)) {
+        this.makeApiRequest();
+    }
+
+    if(isPlatformBrowser(this.platformId)) {
+      let pageKey = makeStateKey<any>('page');
+      let dynamicPageItemKey = makeStateKey<any>('dynamicPageItem');
+      this.page = this.transferState.get(pageKey, null);
+      this.dynamicPageItem = this.transferState.get(dynamicPageItemKey, null);
+      this.transferState.remove(pageKey);
+      this.pageStatus = 200;
     }
 
     this.routerSubscription = this.router.events.subscribe((event) => {
@@ -80,48 +92,27 @@ export class PageComponent implements OnInit, OnDestroy {
     let currentPath = this.location.path().split('?')[0] || '/home';
     if (currentPath === '' || currentPath === '/favicon.png') currentPath = '/home';
 
-    let pageKey = makeStateKey<any>('page' + currentPath.replaceAll('/', '-'));
-    let sitemapKey = makeStateKey<any>('page-sitemap');
-    let dynamicPageItemKey = makeStateKey<any>('dynamicPageItem' + currentPath.replaceAll('/', '-'));
+    let pageKey = makeStateKey<any>('page');
+    let dynamicPageItemKey = makeStateKey<any>('dynamicPageItem');
 
-    try {
-      let sitemap = this.transferState.get(sitemapKey, null);
-      if (!sitemap) {
-        sitemap = await firstValueFrom(this.agilityService.getSitemapFlat());
-      }
-      const pageInSitemap = sitemap[currentPath];
-      if (!pageInSitemap) {
-        this.pageStatus = 404;
-        return;
-      }
-
-      if (pageInSitemap.contentID) {
-        this.dynamicPageItem = this.transferState.get(dynamicPageItemKey, null);
-        this.transferState.remove(dynamicPageItemKey);
-        if (!this.dynamicPageItem) {
-          this.dynamicPageItem = await firstValueFrom(this.agilityService.getContentItem(pageInSitemap.contentID));
-        }
-      }
-
-      this.page = this.transferState.get(pageKey, null);
-      this.transferState.remove(pageKey);
-      if (!this.page) {
-        this.page = await firstValueFrom(this.agilityService.getPage(pageInSitemap.pageID));
-      }
-
-      this.titleService.setTitle(pageInSitemap.title);
-      this.pageStatus = 200;
-
-
-      if (this.isServer) {
-        this.transferState.set(sitemapKey, sitemap);
-        this.transferState.set(dynamicPageItemKey, this.dynamicPageItem);
-        this.transferState.set(pageKey, this.page);
-      }
-
-    } catch (error) {
-      console.error('Error making API request', error);
-      this.pageStatus = 500;
+    const sitemap = await firstValueFrom(this.agilityService.getSitemapFlat());
+    const pageInSitemap = sitemap[currentPath];
+    
+    if (!pageInSitemap) {
+      this.pageStatus = 404;
+      return;
     }
+
+    if (pageInSitemap.contentID) {
+        this.dynamicPageItem = await firstValueFrom(this.agilityService.getContentItem(pageInSitemap.contentID));
+    }
+
+    this.page = await firstValueFrom(this.agilityService.getPage(pageInSitemap.pageID));
+    this.titleService.setTitle(pageInSitemap.title);
+    this.pageStatus = 200;
+    this.transferState.set(dynamicPageItemKey, this.dynamicPageItem);
+    this.transferState.set(pageKey, this.page);
+      
+
   }
 }

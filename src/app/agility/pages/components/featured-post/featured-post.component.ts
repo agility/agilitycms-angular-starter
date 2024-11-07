@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, TransferState, makeStateKey, isDevMode } from '@angular/core';
+import { Component, OnInit, Input, TransferState, makeStateKey, isDevMode, OnChanges, SimpleChanges } from '@angular/core';
 import { AgilityService } from '../../../agility.service';
 import { Router, RouterLink } from '@angular/router';
 import { NgIf } from '@angular/common';
@@ -14,9 +14,9 @@ const CATEGORIES_KEY = makeStateKey<any>('categories');
   selector: 'app-module-featuredpost',
   standalone: true,
   imports: [RouterLink, NgIf],
-  templateUrl: './featured-post.component.html',
+  templateUrl: './featured-post.component.html'
 })
-export class ModuleFeaturedPost implements OnInit {
+export class ModuleFeaturedPost implements OnInit, OnChanges {
   @Input() data: any;
 
   public item: any = null;
@@ -27,18 +27,28 @@ export class ModuleFeaturedPost implements OnInit {
 
   constructor(private agilityService: AgilityService, private state: TransferState, private router: Router) {
     this.isDevMode = isDevMode();
-   }
+  }
 
   public navigate(e: Event, url: string) {
     e.preventDefault();
-    if(this.isDevMode || this.agilityService.isPreviewMode) {
-    this.router.navigate([url]);
+    if (this.isDevMode || this.agilityService.isPreviewMode) {
+      this.router.navigate([url]);
     } else {
       window.location.href = url;
     }
   }
 
   async ngOnInit(): Promise<void> {
+    await this.initializeComponent();
+  }
+
+  async ngOnChanges(changes: SimpleChanges): Promise<void> {
+    if (changes['data']) {
+      await this.initializeComponent();
+    }
+  }
+
+  private async initializeComponent(): Promise<void> {
     try {
       let categoriesRes = this.state.get(CATEGORIES_KEY, null as any);
 
