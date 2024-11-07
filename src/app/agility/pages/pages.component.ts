@@ -11,6 +11,9 @@ import { AgilityComponentsDirective } from './components/components.directive';
 import { AgilityComponentsService } from './components/components.service';
 import { AgilityComponents } from "./components/components.component";
 import { isDevMode } from '@angular/core';
+import { PreviewBarComponent } from './components/preview-bar/preview-bar.component';
+import { SiteHeaderComponent } from '../../components/site-header/site-header.component';
+import { SiteFooterComponent } from '../../components/site-footer/site-footer.component';
 
 
 
@@ -50,7 +53,7 @@ interface Page {
 @Component({
   selector: 'agility-page',
   standalone: true,
-  imports: [JsonPipe, NgIf, NgFor, KeyValuePipe, AgilityComponentsDirective, AgilityComponents],
+  imports: [JsonPipe, NgIf, NgFor, KeyValuePipe,  AgilityComponents, PreviewBarComponent, SiteHeaderComponent, SiteFooterComponent],
   providers: [AgilityComponentsService],
   templateUrl: 'pages.component.html',
 })
@@ -83,9 +86,17 @@ export class PageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    if(this.isServer){
-      // this pulls data from /data/agility-pages.json and sets it into TrasnferState
-      this.preloadTransferStateData();
+    if(isPlatformServer(this.platformId)) {
+        this.loadPage();
+    }
+
+    if(isPlatformBrowser(this.platformId)) {
+      let pageKey = makeStateKey<any>('page');
+      let dynamicPageItemKey = makeStateKey<any>('dynamicPageItem');
+      this.page = this.transferState.get(pageKey, null);
+      this.dynamicPageItem = this.transferState.get(dynamicPageItemKey, null);
+      this.transferState.remove(pageKey);
+      this.pageStatus = 200;
     }
 
     // this.loadPage();
@@ -128,41 +139,27 @@ export class PageComponent implements OnInit, OnDestroy {
     let currentPath = this.location.path().split('?')[0] || '/home';
     if (currentPath === '' || currentPath === '/favicon.png') currentPath = '/home';
 
-    let pageKey = makeStateKey<any>(currentPath);
+    let pageKey = makeStateKey<any>('page');
+    let dynamicPageItemKey = makeStateKey<any>('dynamicPageItem');
 
-    const pageData = this.transferState.get(pageKey, null).page;
-    const dynamicPageItem = this.transferState.get(pageKey, null).dynamicPageItem;
-
-    if(pageData){
-
-      this.page = pageData
-      this.dynamicPageItem = dynamicPageItem
-
-      if(!this.page){
-        this.page = await firstValueFrom(this.agilityService.getPage(pageData.pageID));
-        if(this.page){
-          this.transferState.set(pageKey, this.page);
-        } else {
-          this.pageStatus = 404;
-          return;
-        }
-
-        // if there's a contentID set for the page, get the dynamic page item
-        if (this.page?.contentID !== undefined && this.page?.contentID !== null) {
-          this.dynamicPageItem = await firstValueFrom(this.agilityService.getContentItem(this.page.contentID));
-        }
-
-        this.transferState.set(pageKey, {page: this.page, dynamicPageItem: this.dynamicPageItem});
-
-      }
-
-      this.titleService.setTitle(this.page?.title || 'AgilityCMS Angular SSR Starter');
-      this.pageStatus = 200;
-
-    } else {
-   
-       console.log('No page data found in transfer state')
+    const sitemap = await firstValueFrom(this.agilityService.getSitemapFlat());
+    const pageInSitemap = sitemap[currentPath];
+    
+    if (!pageInSitemap) {
+      this.pageStatus = 404;
+      return;
     }
+
+    if (pageInSitemap.contentID) {
+        this.dynamicPageItem = await firstValueFrom(this.agilityService.getContentItem(pageInSitemap.contentID));
+    }
+
+    this.page = await firstValueFrom(this.agilityService.getPage(pageInSitemap.pageID));
+    this.titleService.setTitle(pageInSitemap.title);
+    this.pageStatus = 200;
+    this.transferState.set(dynamicPageItemKey, this.dynamicPageItem);
+    this.transferState.set(pageKey, this.page);
+      
 
   }
 }

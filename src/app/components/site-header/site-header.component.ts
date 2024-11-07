@@ -1,12 +1,9 @@
-import { Component, OnInit, TransferState, makeStateKey } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID, TransferState, makeStateKey } from '@angular/core';
 import { isDevMode } from '@angular/core';
 import { AgilityService } from '../../agility/agility.service';
 import { Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
-import { NgIf, NgFor, isPlatformBrowser } from '@angular/common';
-
-const SITEMAP_KEY = makeStateKey<any>('sitemap');
-const HEADER_KEY = makeStateKey<any>('header');
+import { NgIf, NgFor, isPlatformBrowser, isPlatformServer } from '@angular/common';
 
 @Component({
   selector: 'site-header',
@@ -25,7 +22,8 @@ export class SiteHeaderComponent implements OnInit {
   constructor(
     private agilityService: AgilityService,
     private transferState: TransferState,
-    private router: Router
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.isPreviewMode = this.agilityService.isPreviewMode;
     this.isDevMode = isDevMode();
@@ -49,18 +47,23 @@ export class SiteHeaderComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    try {
-      let sitemap = this.transferState.get(SITEMAP_KEY, null);
-      let obj = this.transferState.get(HEADER_KEY, null);
 
-      if (!sitemap) {
+
+    const SITEMAP_KEY = makeStateKey<any>('sitemap');
+    const HEADER_KEY = makeStateKey<any>('header');
+
+  
+      let sitemap, obj;
+      if(isPlatformServer(this.platformId)) {
         sitemap = await firstValueFrom(this.agilityService.getSitemapNested());
         this.transferState.set(SITEMAP_KEY, sitemap);
-      }
-
-      if (!obj) {
         obj = await firstValueFrom(this.agilityService.getHeader());
         this.transferState.set(HEADER_KEY, obj);
+      }
+
+      if(isPlatformBrowser(this.platformId)) {
+       sitemap = this.transferState.get(SITEMAP_KEY, null);
+       obj = this.transferState.get(HEADER_KEY, null);
       }
 
       if (obj && obj.fields) {
@@ -75,9 +78,6 @@ export class SiteHeaderComponent implements OnInit {
             title: s.title,
           };
         });
-
-    } catch (error) {
-      console.error('An error occurred while fetching data:', error);
-    }
+  
   }
 }

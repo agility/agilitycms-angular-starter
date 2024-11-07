@@ -37,7 +37,10 @@
             },
             "ssr": {
               "entry": "server.ts"
-            }
+            },
+            "allowedCommonJsDependencies": [
+              "dotenv"
+            ]
           },
           "configurations": {
             "production": {
