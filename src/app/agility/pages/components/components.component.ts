@@ -27,10 +27,10 @@ export class AgilityComponents implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.loadComponent()
+		this.loadComponents()
 	}
 
-	loadComponent() {
+	loadComponents() {
 
 		//get the module name
 		let moduleName = this.moduleObj?.value.module;

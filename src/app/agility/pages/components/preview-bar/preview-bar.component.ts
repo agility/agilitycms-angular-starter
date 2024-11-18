@@ -3,21 +3,26 @@ import { AgilityService } from '../../../agility.service';
 import { isDevMode } from '@angular/core';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgClass, NgIf } from '@angular/common';
 
 @Component({
   selector: 'agility-preview-bar',
   standalone: true,
-  imports: [FontAwesomeModule],
+  imports: [FontAwesomeModule, NgIf, NgClass],
   templateUrl: './preview-bar.component.html',
 })
 export class PreviewBarComponent implements OnInit {
-  public visible: boolean = true;
+  public visible: boolean = false;
   public isPreview: boolean = false;
   public isDevMode: boolean = false;
+  public showPreviewMode: boolean = false;
   public faGithub = faGithub;
   public faInfoCircle = faInfoCircle;
+  public faChevronDown = faChevronDown;
+  public faChevronUp = faChevronUp;
 
   constructor(
     private agilityService: AgilityService,

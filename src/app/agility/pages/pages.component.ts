@@ -52,7 +52,7 @@ export class PageComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     if(isPlatformServer(this.platformId)) {
-        this.makeApiRequest();
+        this.loadPage();
     }
 
     if(isPlatformBrowser(this.platformId)) {
@@ -66,13 +66,13 @@ export class PageComponent implements OnInit, OnDestroy {
 
     this.routerSubscription = this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        this.makeApiRequest();
+        this.loadPage();
       }
     });
 
     this.previewModeSubscription = this.agilityService.previewModeChange.subscribe(() => {
       if (isPlatformBrowser(this.platformId)) {
-        this.makeApiRequest();
+        this.loadPage();
       }
     });
   }
@@ -87,7 +87,8 @@ export class PageComponent implements OnInit, OnDestroy {
   }
 
 
-  async makeApiRequest() {
+  async loadPage() {
+
 
     let currentPath = this.location.path().split('?')[0] || '/home';
     if (currentPath === '' || currentPath === '/favicon.png') currentPath = '/home';
@@ -97,7 +98,7 @@ export class PageComponent implements OnInit, OnDestroy {
 
     const sitemap = await firstValueFrom(this.agilityService.getSitemapFlat());
     const pageInSitemap = sitemap[currentPath];
-    
+
     if (!pageInSitemap) {
       this.pageStatus = 404;
       return;
@@ -112,7 +113,7 @@ export class PageComponent implements OnInit, OnDestroy {
     this.pageStatus = 200;
     this.transferState.set(dynamicPageItemKey, this.dynamicPageItem);
     this.transferState.set(pageKey, this.page);
-      
+
 
   }
 }

@@ -39,16 +39,16 @@ export class ModuleFeaturedPost implements OnInit, OnChanges {
   }
 
   async ngOnInit(): Promise<void> {
-    await this.initializeComponent();
+    await this.loadComponent();
   }
 
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
     if (changes['data']) {
-      await this.initializeComponent();
+      await this.loadComponent();
     }
   }
 
-  private async initializeComponent(): Promise<void> {
+  private async loadComponent(): Promise<void> {
     try {
       let categoriesRes = this.state.get(CATEGORIES_KEY, null as any);
 
