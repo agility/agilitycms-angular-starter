@@ -1,15 +1,18 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
-# env files
-/src/environments/.environment.prod.ts 
-/src/environments/.environment.ts
-
 # compiled output
 /dist
 /tmp
 /out-tsc
-# Only exists if Bazel was run
+/.angular
 /bazel-out
+prerender-routes.js
+/src/environments/environment.prod.ts
+/src/environments/environment.ts
+/src/environments
+content.json
+pages.json
+agility-routes.txt
 
 # dependencies
 /node_modules

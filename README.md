@@ -1,62 +1,25 @@
-# Agility CMS & Angular Starter
+# AgilityCMS Angular 18 SSR Starter
+This repository is a template you can use to render your AgilityCMS website on Angular 18. 
 
-New to Agility CMS? [Sign up for a FREE account](https://agilitycms.com/free)
+## Installation
+Run `npm install` to install the required packages.
 
-[Introduction to Angular and Agility CMS](https://help.agilitycms.com/hc/en-us/articles/360056766852)
+## Development server
 
-## About This Starter
-- Angular is a popular platform and framework maintained by Google for building single-page client applications using HTML and TypeScript.
-- Supports full [Page Management](https://help.agilitycms.com/hc/en-us/articles/360055805831).
-- Supports Preview Mode.
+Run `npm run dev` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-### Tailwind CSS
+You will see client side requests. Routing is done via the <a [routerLink]> tags and takes place client side.
 
-This starter uses [Tailwind CSS](https://tailwindcss.com/), a simple and lightweight utility-first CSS framework packed with classes that can be composed to build any design, directly in your markup.
+## Production server
+Run `npm run build` this will prerender your sitemap pages and create a static build of your site. The build artifacts will be stored in the `dist/` directory.
+Run `npm run start` this will start the built production server. 
 
-It also comes equipped with [Autoprefixer](https://www.npmjs.com/package/autoprefixer), a plugin which use the data based on current browser popularity and property support to apply CSS prefixes for you.
+No client side requests are made in production. Routing is done via the browser and <a [href]> tags
 
-## Getting Started
+## Running unit tests
 
-To start using the Agility CMS & Angular Starter, [sign up](https://agilitycms.com/free) for a FREE account and create a new Instance using the Blog Template.
+Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-### Setting up the Starter
+## Running end-to-end tests
 
-1. cd into the `src/environments` directory.
-2. Overwrite the values in the `environment.ts` file using your Preview API Key.
-4. Overwrite the values in the `environment.prod.ts` file using your Fetch API Key.
-
-You can get these values from the API Keys page in [Agility Settings](https://manager.agilitycms.com/settings/apikeys).
-
-## Running the Site Locally
-- `npm run start` => Starts your development environment.
-- `npm run build` => Builds your production enviornment.
-
-## How It Works
-- [How Pages Work](https://help.agilitycms.com/hc/en-us/articles/4403477298701)
-- [How Page Modules Work](https://help.agilitycms.com/hc/en-us/articles/4403477635853)
-- [How To Fetch Additional Data in Page Modules](https://help.agilitycms.com/hc/en-us/articles/4403478652301)
-
-## Resources
-
-### Agility CMS
-- [Official site](https://agilitycms.com)
-- [Documentation](https://help.agilitycms.com/hc/en-us)
-
-### Angular
-- [Official site](https://angular.io/)
-- [Documentation](https://angular.io/docs)
-
-### Tailwind CSS
-- [Official site](http://tailwindcss.com/)
-- [Documentation](http://tailwindcss.com/docs)
-
-### Community
-- [Official Slack](https://join.slack.com/t/agilitycommunity/shared_invite/enQtNzI2NDc3MzU4Njc2LWI2OTNjZTI3ZGY1NWRiNTYzNmEyNmI0MGZlZTRkYzI3NmRjNzkxYmI5YTZjNTg2ZTk4NGUzNjg5NzY3OWViZGI)
-- [Blog](https://agilitycms.com/resources/posts)
-- [GitHub](https://github.com/agility)
-- [Forums](https://help.agilitycms.com/hc/en-us/community/topics)
-- [Facebook](https://www.facebook.com/AgilityCMS/)
-- [Twitter](https://twitter.com/AgilityCMS)
-
-## Feedback and Questions
-If you have feedback or questions about this starter, please use the [Github Issues](https://github.com/agility/agilitycms-angular-starter/issues) on this repo, join our [Community Slack Channel](https://join.slack.com/t/agilitycommunity/shared_invite/enQtNzI2NDc3MzU4Njc2LWI2OTNjZTI3ZGY1NWRiNTYzNmEyNmI0MGZlZTRkYzI3NmRjNzkxYmI5YTZjNTg2ZTk4NGUzNjg5NzY3OWViZGI) or create a post on the [Agility Developer Community](https://help.agilitycms.com/hc/en-us/community/topics).
+Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
