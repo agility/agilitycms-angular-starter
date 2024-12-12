@@ -1,25 +1,49 @@
 # AgilityCMS Angular 18 SSR Starter
 This repository is a template you can use to render your AgilityCMS website on Angular 18. 
 
-## Installation
-Run `npm install` to install the required packages.
+**Prerequesites**
+Node v20+ 
 
-## Development server
+**Installation**
+Clone this Repository
+`npm install` to install the the required packages.
 
-Run `npm run dev` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+**Environmental Variables**
+You will need to get the following from the Agility Manager;
+`GUID` `API_PREVIEW_KEY` `API_FETCH_KEY` `LOCALE` `SITEMAP`
 
-You will see client side requests. Routing is done via the <a [routerLink]> tags and takes place client side.
+https://manager.agilitycms.com/settings/apikeys
 
-## Production server
-Run `npm run build` this will prerender your sitemap pages and create a static build of your site. The build artifacts will be stored in the `dist/` directory.
-Run `npm run start` this will start the built production server. 
+You will need to populate an `.env` file in the root of your project as follows.
 
-No client side requests are made in production. Routing is done via the browser and <a [href]> tags
+This will use `dotenv.config.json` to write your `environment.ts` and `environment.prod.ts` files required by Angular. This approach avoids exposing your API keys to your Git repository.
 
-## Running unit tests
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+AGILITY_GUID=e13c7b01-u
+AGILITY_PREVIEW=true
+AGILITY_API_PREVIEW_KEY=AngularPreview.6617c54b87588d941d32416a9dfb1e8fd9e556439984e8236ac75896e47ae02a
+AGILITY_API_FETCH_KEY=AngularFetch.a20b40fd8cd25e02ba62ca5c3acbaae5512c1d633b51ea104ac28f9bc3b9d44d
+AGILITY_LOCALE=en-us
+AGILITY_SITEMAP=website
 
-## Running end-to-end tests
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+```
+
+**Build Commands**
+`npm run dev`  start the development server
+`npm run build` pre-renders the routes via agility-routes.txt then builds the production server
+`npm run start` starts the production server
+`npm run prerender:routes` just pre-renders the agility-routes.txt
+
+**Key Features**
+
+`Dynamic SSR` Supports server-side rendering for dynamic pages generated from an Agility CMS.
+
+`Pre-rendering and TransferState` Improves initial page load performance and reduces redundant requests.
+
+`Hybrid SSR` Uses a blend of SSR and client-side routing for optimal load times and user experience.
+
+`Seamless Agility CMS Integration` Designed to fit naturally with Agility’s headless CMS ecosystem, making it easier to manage content dynamically.
+
+`DotEnv Support` Improves environmental variable loading and allows keys to be stored at server level
